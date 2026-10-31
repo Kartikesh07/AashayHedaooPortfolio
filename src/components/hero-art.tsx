@@ -35,7 +35,7 @@ export function HeroArt() {
             src="/images/MAHRCRhwd4Q.png"
             alt="Krishna Stories original game artwork"
             fill
-            priority
+            loading="eager"
             sizes="280px"
           />
         </div>
@@ -53,7 +53,7 @@ export function HeroArt() {
               src="/images/MAHRC1dK9uE.png"
               alt="Detective IQ 3 original game artwork"
               fill
-              priority
+              loading="eager"
               sizes="340px"
             />
           </div>

@@ -80,7 +80,7 @@ export default async function ProjectDetail({
               src={cover.poster || cover.src}
               alt={`${p.title} original game artwork`}
               fill
-              priority
+              loading="eager"
               sizes="95vw"
             />
             <span className="mono">{p.title}</span>
