@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
-const config: NextConfig = {
-  trailingSlash: true,
-  devIndicators: false,
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  images: {
+    unoptimized: true, // Local images and posters
+  },
 };
-export default config;
+
+export default nextConfig;
+

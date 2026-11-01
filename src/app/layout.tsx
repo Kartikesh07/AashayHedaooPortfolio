@@ -1,48 +1,69 @@
 import type { Metadata } from "next";
-import { Unbounded, IBM_Plex_Sans, Space_Mono } from "next/font/google";
-import { Shell } from "@/components/shell";
+import { Bricolage_Grotesque, DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-const display = Unbounded({
+
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
+  variable: "--font-bricolage",
   display: "swap",
 });
-const body = IBM_Plex_Sans({
+
+const dmSans = DM_Sans({
   subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const ibmMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
-  variable: "--font-body",
-  display: "swap",
-});
-const mono = Space_Mono({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-mono",
+  variable: "--font-ibm-mono",
   display: "swap",
 });
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  ),
-  title: {
-    default: "The Play Atlas — Aashay Hedaoo",
-    template: "%s — Aashay Hedaoo",
-  },
+  metadataBase: new URL("https://aashayhedaoo.com"),
+  title: "Aashay Hedaoo — Senior Game & Level Designer | THE PLAYBOOK",
   description:
-    "I don't just build worlds; I craft experiences that challenge, delight, and captivate players.",
+    "Portfolio of Aashay Hedaoo, Mobile Game Designer & Senior Level Designer with 1,500+ levels designed and 10M+ downloads. Specializing in high-retention mechanics, progressive puzzle difficulty curves, and systemic player psychology.",
+  keywords: [
+    "Game Designer",
+    "Level Designer",
+    "Aashay Hedaoo",
+    "Game Design Portfolio",
+    "Mobile Game Designer",
+    "Puzzle Design",
+    "Physics Mechanics",
+    "Retention Architecture",
+    "Detective IQ",
+    "Krishna Stories Game"
+  ],
+  authors: [{ name: "Aashay Hedaoo" }],
+  creator: "Aashay Hedaoo",
   openGraph: {
-    title: "The Play Atlas — Aashay Hedaoo",
-    description: "Game Design · Level Design · Systems Design",
-    images: ["/images/MAHRC1dK9uE.png"],
+    type: "website",
+    locale: "en_US",
+    url: "https://aashayhedaoo.com",
+    title: "Aashay Hedaoo — Senior Game & Level Designer",
+    description: "I DESIGN WHAT PLAYERS FEEL. 1,500+ crafted levels, 10M+ player downloads, 20+ published games.",
+    siteName: "Aashay Hedaoo Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aashay Hedaoo — Senior Game & Level Designer",
+    description: "I DESIGN WHAT PLAYERS FEEL. 1,500+ crafted levels, 10M+ player downloads, 20+ published games.",
   },
 };
+
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${display.variable} ${body.variable} ${mono.variable}`}>
-        <Shell>{children}</Shell>
+    <html lang="en" className={`${bricolage.variable} ${dmSans.variable} ${ibmMono.variable} scroll-smooth`}>
+      <body className="bg-ivory text-forest antialiased min-h-screen flex flex-col font-sans selection:bg-lime selection:text-forest">
+        {children}
       </body>
     </html>
   );
