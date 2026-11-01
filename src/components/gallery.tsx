@@ -14,18 +14,43 @@ export function Gallery({ items, title }: { items: Asset[]; title: string }) {
       trigger.current?.focus();
     }
   }, [active]);
+  useEffect(() => {
+    if (active === null) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [active]);
+  const grid = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (!entry.isIntersecting) (entry.target as HTMLVideoElement).pause();
+      },
+      { threshold: 0.1 },
+    );
+    grid.current?.querySelectorAll("video").forEach((v) => observer.observe(v));
+    return () => observer.disconnect();
+  }, [items]);
   const shift = (n: number) =>
     setActive((a) =>
       a === null ? null : (a + n + items.length) % items.length,
     );
   return (
     <>
-      <div className="media-grid">
+      <div className="media-grid" ref={grid}>
         {items.map((a, i) =>
           a.src.endsWith(".mp4") ? (
             <figure key={a.id}>
               <video
                 controls
+                onPlay={(e) => {
+                  document.querySelectorAll("video").forEach((v) => {
+                    if (v !== e.currentTarget) v.pause();
+                  });
+                }}
                 playsInline
                 preload="none"
                 poster={a.poster}
@@ -64,7 +89,11 @@ export function Gallery({ items, title }: { items: Asset[]; title: string }) {
       <dialog
         ref={dialog}
         className="lightbox"
-        onCancel={() => setActive(null)}
+        onCancel={(e) => {
+          e.preventDefault();
+          setActive(null);
+        }}
+        onClose={() => setActive(null)}
         onClick={(e) => {
           if (e.target === e.currentTarget) setActive(null);
         }}

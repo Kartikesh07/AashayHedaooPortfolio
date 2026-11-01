@@ -3,4 +3,3 @@ node_modules/
 out/
 *.tsbuildinfo
 .env*
-.openai/local*

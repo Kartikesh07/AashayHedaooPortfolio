@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import data from "@/data/retention.json";
-const colors = ["#5855f7", "#437e30", "#d06a36"];
+const colors = ["#5231B5", "#FF704A", "#261841"];
 export function Retention() {
   const [enabled, setEnabled] = useState([true, true, true]);
   return (
@@ -33,8 +33,8 @@ export function Retention() {
               x2="975"
               y1={350 - n * 3}
               y2={350 - n * 3}
-              stroke="#17191c"
-              strokeOpacity=".12"
+              stroke="#e2e8f0"
+              strokeOpacity="1"
             />
             <text x="0" y={355 - n * 3} fontSize="15" fill="currentColor">
               {n}%

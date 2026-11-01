@@ -1,44 +1,20 @@
-# Aashay Hedaoo — Designed to Play
+# Aashay Hedaoo — Game & Level Designer
 
-A responsive game designer portfolio built with Next.js App Router, TypeScript, Tailwind CSS, Motion for React, Lucide, and `next/font`.
-
-## Run locally
+Single-page Next.js portfolio: **PLAY/FORM — The Interactive Game Design Zine**. Built with TypeScript, Tailwind CSS, Motion for React, Lucide, and the original project media.
 
 ```sh
-npm ci
+npm install
 npm run dev
 ```
 
 Open http://127.0.0.1:3000.
 
-## Verify and build
+Checks: `npm run typecheck`, `npm run lint`, `npm run build`, then `npm run verify:content`. Production builds use Next.js's supported Webpack option to avoid a Windows Turbopack worker crash observed in this environment. Development retains Turbopack.
 
-```sh
-npm run typecheck
-npm run lint
-npm run build
-python scripts/verify-content.py
-```
+Content lives in `src/data/portfolio.ts`, `src/data/source.json`, and `src/data/assets.json`. The original Canva text, external links, gameplay videos, sketches, and design documents are retained. Images use the standard Next.js image optimizer. The site has no hosting integration or automatic publishing workflow.
 
-The static export is written to `out/`. Every project route is generated at build time. No backend, authentication service, or contact form is needed; email and phone links use their native protocols.
+Home, Work, Process, About, and Contact use anchors on `/`. All seven case studies expand in place. Old page URLs redirect to their corresponding anchors; project anchors open the matching case study. Gallery dialogs support Escape, arrow keys, focus trapping, and return focus. Gameplay is user-initiated with posters and `preload="none"`; case-study media mounts on first expansion and pauses when closed.
 
-## Content
+The content audit checks the home page alone, so legacy routes cannot conceal missing content. It also checks the seven case studies, local media, document links, and single-page navigation. Original spelling and repeated source wording are intentionally retained.
 
-- `src/data/source.json`: verbatim text, URLs, and media references from all 28 original Canva sections.
-- `src/data/portfolio.ts`: structured project routing and presentation metadata.
-- `src/data/assets.json`: original asset IDs, local files, dimensions, and source URLs.
-- `src/data/retention.json`: original chart series, without invented or interpolated values.
-- `public/images` and `public/videos`: downloaded originals; full quality retained.
-- `public/optimized`: responsive WebP derivatives used through a custom Next Image loader. `predev` and `prebuild` generate these from the originals.
-- `public/documents`: complete DOCX exports of the three public Google design documents, including embedded images. The original Google Docs and OneDrive links also remain on the project pages.
-- `audit`: original public Canva source and text exports used during the audit.
-
-The source contains spelling mistakes, repeated text, a Spotify link, and store search URLs. These are intentionally preserved. See `CONTENT_AUDIT.md` for provenance and verification limits.
-
-## Accessibility and interaction
-
-Keyboard-accessible navigation and filters; native modal image galleries with arrow keys, Escape, and focus restoration; native video controls; accessible chart toggles and data table; visible focus styles; reduced-motion support; touch-safe layouts; desktop-only spring cursor; sticky project section navigation.
-
-## Hosting
-
-`.openai/hosting.json` declares the existing private Sites project and `out` as its static directory. Keep the project ID unchanged when publishing updates. The site can also be hosted by any static hosting service that supports directory-index URLs.
+The visual direction is documented in `DESIGN_DIRECTION.md`; preservation and browser QA are documented in `CONTENT_AUDIT.md`. The project exhibition supports hover, focus, arrow keys, and user-controlled gameplay. The design desk supports bounded mouse dragging, arrow-key movement, reset and image expansion; mobile uses a static arrangement and vertical project panels.

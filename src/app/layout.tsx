@@ -1,13 +1,26 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, DM_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Shell } from "@/components/shell";
 import "./globals.css";
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const display = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+const body = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
+});
 export const metadata: Metadata = {
   metadataBase: new URL(
-    "https://aashay-designed-to-play.mobilepiano1.chatgpt.site",
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
   title: {
     default: "Aashay Hedaoo — Game Designer",
@@ -26,7 +39,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${inter.variable} ${space.variable} ${mono.variable}`}>
+      <body className={`${display.variable} ${body.variable} ${mono.variable}`}>
         <Shell>{children}</Shell>
       </body>
     </html>

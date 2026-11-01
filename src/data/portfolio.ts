@@ -20,7 +20,6 @@ export type Project = {
   category: string;
   sections: number[];
   cover?: string;
-  color: string;
   number: string;
   overview: string;
 };
@@ -31,7 +30,6 @@ const definitions = [
     category: "Mobile",
     sections: [6, 7],
     cover: "MAHRCRhwd4Q",
-    color: "#dce6bf",
   },
   {
     slug: "detective-iq-3",
@@ -39,7 +37,6 @@ const definitions = [
     category: "Mobile",
     sections: [8],
     cover: "MAHRC1dK9uE",
-    color: "#c9d4ed",
   },
   {
     slug: "detective-iq-2",
@@ -47,7 +44,6 @@ const definitions = [
     category: "Mobile",
     sections: [9, 10, 11, 12, 13],
     cover: "VAG2aDeQqm4",
-    color: "#e4d8ec",
   },
   {
     slug: "detective-iq",
@@ -55,7 +51,6 @@ const definitions = [
     category: "Mobile",
     sections: [14, 15, 16, 17],
     cover: "VAG3e04kpq4",
-    color: "#d5e2da",
   },
   {
     slug: "pizza-iq",
@@ -63,21 +58,18 @@ const definitions = [
     category: "Mobile",
     sections: [18, 19],
     cover: "VAG2azvU0lc",
-    color: "#f3d0b0",
   },
   {
     slug: "wobble-bomber",
     title: "Wobble Bomber",
     category: "Personal",
     sections: [22],
-    color: "#bdf45a",
   },
   {
     slug: "dreamlink",
     title: "DreamLink: The Fractured Timeline",
     category: "Personal",
     sections: [23],
-    color: "#5855f7",
   },
 ];
 export const projects: Project[] = definitions.map((p, i) => ({
