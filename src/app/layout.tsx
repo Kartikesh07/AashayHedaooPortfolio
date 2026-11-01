@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, DM_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Unbounded, IBM_Plex_Sans, Space_Mono } from "next/font/google";
 import { Shell } from "@/components/shell";
 import "./globals.css";
-const display = Bricolage_Grotesque({
+const display = Unbounded({
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
-const body = DM_Sans({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-body",
   display: "swap",
 });
-const mono = IBM_Plex_Mono({
+const mono = Space_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -23,13 +25,13 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
   title: {
-    default: "Aashay Hedaoo — Game Designer",
+    default: "The Play Atlas — Aashay Hedaoo",
     template: "%s — Aashay Hedaoo",
   },
   description:
     "I don't just build worlds; I craft experiences that challenge, delight, and captivate players.",
   openGraph: {
-    title: "Aashay Hedaoo — Game Designer",
+    title: "The Play Atlas — Aashay Hedaoo",
     description: "Game Design · Level Design · Systems Design",
     images: ["/images/MAHRC1dK9uE.png"],
   },

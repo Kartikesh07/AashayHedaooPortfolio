@@ -1,204 +1,81 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  MotionConfig,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "motion/react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { MotionConfig } from "motion/react";
+import { ArrowDownRight, ArrowUpRight, List, X } from "lucide-react";
+import { projects } from "@/data/portfolio";
 
-const routes = ["Home", "Work", "Process", "About", "Contact"];
-
-function Cursor() {
-  const x = useMotionValue(-100),
-    y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 450, damping: 35 });
-  const sy = useSpring(y, { stiffness: 450, damping: 35 });
-  const [label, setLabel] = useState("");
-  const reduce = useReducedMotion();
-  useEffect(() => {
-    if (
-      reduce ||
-      !window.matchMedia("(hover:hover) and (pointer:fine)").matches
-    )
-      return;
-    const move = (e: PointerEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      setLabel(
-        (e.target as HTMLElement).closest<HTMLElement>("[data-cursor]")?.dataset
-          .cursor || "",
-      );
-    };
-    const leave = () => {
-      x.set(-100);
-      y.set(-100);
-    };
-    window.addEventListener("pointermove", move);
-    document.addEventListener("pointerleave", leave);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerleave", leave);
-    };
-  }, [reduce, x, y]);
-  return (
-    <motion.div
-      aria-hidden
-      className={`cursor ${label ? "cursor-active" : ""}`}
-      style={{ x: sx, y: sy }}
-    >
-      {label && (
-        <>
-          <ArrowUpRight size={19} />
-          {label}
-        </>
-      )}
-    </motion.div>
-  );
-}
+const destinations = [
+  ["home", "The Atlas"], ["work", "Project Worlds"],
+  ["process", "Design Lab"], ["about", "The Designer"],
+  ["contact", "Final Destination"],
+];
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
+  const dialog = useRef<HTMLDialogElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
-  const menu = useRef<HTMLElement>(null);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
-      },
-      { rootMargin: "-15% 0px -65% 0px" },
-    );
-    routes.forEach((r) => {
-      const el = document.getElementById(r.toLowerCase());
-      if (el) observer.observe(el);
-    });
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>("[data-destination]"));
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) visible.add(entry.target.id);
+        else visible.delete(entry.target.id);
+      });
+      const current = nodes.filter((node) => visible.has(node.id)).at(-1);
+      if (current) setActive(current.id);
+    }, { rootMargin: "-12% 0px -55% 0px", threshold: 0 });
+    nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, []);
+
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
+    const node = dialog.current;
+    node?.showModal();
     document.body.style.overflow = "hidden";
-    menu.current?.querySelector<HTMLAnchorElement>("a")?.focus();
-    const key = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        toggle.current?.focus();
-      }
-      if (e.key === "Tab") {
-        const links = [
-          toggle.current,
-          ...Array.from(
-            menu.current?.querySelectorAll<HTMLAnchorElement>("a") || [],
-          ),
-        ].filter((el): el is HTMLButtonElement | HTMLAnchorElement => !!el);
-        if (e.shiftKey && document.activeElement === links[0]) {
-          e.preventDefault();
-          links.at(-1)?.focus();
-        } else if (!e.shiftKey && document.activeElement === links.at(-1)) {
-          e.preventDefault();
-          links[0]?.focus();
-        }
-      }
-    };
-    window.addEventListener("keydown", key);
-    return () => {
-      document.body.style.overflow = previous;
-      window.removeEventListener("keydown", key);
-    };
+    return () => { node?.close(); document.body.style.overflow = previous; };
   }, [open]);
-  function navigate(id: string) {
+
+  function close(id?: string) {
+    dialog.current?.close();
     setOpen(false);
-    setActive(id);
-    requestAnimationFrame(() =>
-      document.getElementById(id)?.focus({ preventScroll: true }),
-    );
+    requestAnimationFrame(() => {
+      if (id) document.getElementById(id)?.focus({ preventScroll: true });
+      else toggle.current?.focus();
+    });
   }
+  const currentProject = projects.find((p) => `project-${p.slug}` === active);
+  const currentLabel = currentProject?.title || destinations.find(([id]) => id === active)?.[1] || "The Atlas";
+
   return (
     <MotionConfig reducedMotion="user">
-      <a className="skip-link" href="#main">
-        Skip to content
-      </a>
-      <header className="header">
-        <div className="header-inner wrap">
-          <a
-            href="#home"
-            className="identity"
-            aria-label="Aashay Hedaoo, home"
-            onClick={() => navigate("home")}
-          >
-            <span className="identity-word">
-              AASHAY<span>®</span>
-            </span>
-          </a>
-          <nav className="desktop-nav" aria-label="Main navigation">
-            {routes.map((r) => (
-              <a
-                key={r}
-                href={`#${r.toLowerCase()}`}
-                aria-current={
-                  active === r.toLowerCase() ? "location" : undefined
-                }
-                onClick={() => navigate(r.toLowerCase())}
-              >
-                {r}
-                <span />
-              </a>
-            ))}
-          </nav>
-          <a
-            className="header-contact"
-            href="#contact"
-            onClick={() => navigate("contact")}
-          >
-            Game & level designer
-          </a>
-          <button
-            className="menu-button icon-button"
-            ref={toggle}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <X /> : <Menu />}
-          </button>
+      <a className="skip-link" href="#main">Skip to content</a>
+      <header className="atlas-identity"><a href="#home" aria-label="Aashay Hedaoo, return to the atlas"><strong>AASHAY HEDAOO</strong><span>GAME &amp; LEVEL DESIGNER</span></a></header>
+      <nav className="index-controls" aria-label="Quick navigation">
+        <a href="#work">Work</a><a href="#contact">Contact</a>
+        <button ref={toggle} onClick={() => setOpen(true)} aria-expanded={open} aria-controls="destination-index" aria-haspopup="dialog"><List size={18} strokeWidth={1.5} /><span>Index</span></button>
+      </nav>
+      <dialog ref={dialog} id="destination-index" className="destination-index" aria-labelledby="index-title"
+        onCancel={(event) => { event.preventDefault(); close(); }} onClose={() => setOpen(false)}
+        onClick={(event) => { if (event.target === event.currentTarget) close(); }}>
+        <div className="index-sheet">
+          <div className="index-top"><span className="annotation">AASHAY HEDAOO / PORTFOLIO</span><button autoFocus className="square-control" onClick={() => close()} aria-label="Close destination index"><X size={20} /></button></div>
+          <h2 id="index-title">Choose a<br />destination.</h2>
+          <nav aria-label="Destination index">{destinations.map(([id, label], i) => <a key={id} href={`#${id}`} onClick={() => close(id)} aria-current={active === id || (id === "work" && currentProject) ? "location" : undefined}><span className="annotation">0{i + 1}</span><span>{label}</span><ArrowUpRight size={22} /></a>)}</nav>
+          <div className="index-projects">{projects.map((p) => <a href={`#project-${p.slug}`} key={p.slug} onClick={() => close(`project-${p.slug}`)}><span className="annotation">{p.number}</span>{p.title}</a>)}</div>
         </div>
-        {open && (
-          <motion.nav
-            ref={menu}
-            id="mobile-menu"
-            className="mobile-menu"
-            aria-label="Mobile navigation"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.2 }}
-          >
-            {routes.map((r, i) => (
-              <a
-                href={`#${r.toLowerCase()}`}
-                key={r}
-                aria-current={
-                  active === r.toLowerCase() ? "location" : undefined
-                }
-                onClick={() => navigate(r.toLowerCase())}
-              >
-                <span className="mono">0{i + 1}</span>
-                {r}
-                <ArrowUpRight />
-              </a>
-            ))}
-          </motion.nav>
-        )}
-      </header>
-      <main id="main" tabIndex={-1} inert={open}>
-        {children}
-      </main>
-      <Cursor />
+      </dialog>
+      <main id="main" tabIndex={-1}>{children}</main>
+      <nav className="journey-progress" aria-label="Journey progress">
+        <span className="progress-caption"><ArrowDownRight size={14} />{currentLabel}</span>
+        <div>{destinations.map(([id, label], i) => <a href={`#${id}`} key={id} aria-label={`${label}, destination ${i + 1}`} aria-current={active === id || (id === "work" && currentProject) ? "location" : undefined}><span /></a>)}</div>
+        {currentProject && <span className="annotation">{currentProject.number} / 07</span>}
+      </nav>
     </MotionConfig>
   );
 }

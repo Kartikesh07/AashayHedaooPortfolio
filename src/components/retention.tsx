@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import data from "@/data/retention.json";
-const colors = ["#5231B5", "#FF704A", "#261841"];
+const colors = ["#69E6E1", "#D9A57D", "#F1F3EC"];
 export function Retention() {
   const [enabled, setEnabled] = useState([true, true, true]);
   return (
@@ -33,7 +33,7 @@ export function Retention() {
               x2="975"
               y1={350 - n * 3}
               y2={350 - n * 3}
-              stroke="#e2e8f0"
+              stroke="#355158"
               strokeOpacity="1"
             />
             <text x="0" y={355 - n * 3} fontSize="15" fill="currentColor">
@@ -69,7 +69,7 @@ export function Retention() {
           </text>
         ))}
       </svg>
-      <span className="mono">LEVEL</span>
+      <span className="annotation">LEVEL</span>
       <details>
         <summary>View original data</summary>
         <div className="table-scroll">

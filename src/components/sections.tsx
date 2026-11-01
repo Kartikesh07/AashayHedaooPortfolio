@@ -1,269 +1,40 @@
-import Image from "next/image";
-import { ArrowDownRight, ArrowUp, ArrowUpRight, FileText } from "lucide-react";
+import { ArrowDownRight, ArrowUp, ArrowUpRight } from "lucide-react";
 import { biography, email, linkedin, mediaFor, source } from "@/data/portfolio";
-import { DesignDesk } from "./design-desk";
+import { DesignLab } from "./design-lab";
 import { Gallery } from "./gallery";
-import { Reveal, MagneticLink } from "./reveal";
 
 export function Process() {
-  return (
-    <section id="process" tabIndex={-1} className="process-section section-pad">
-      <div className="wrap">
-        <div className="process-heading">
-          <h2>
-            Loose ideas.
-            <br />
-            Playful possibilities.
-          </h2>
-          <p>
-            The design desk
-            <br />
-            Original sketches, rough levels
-            <br />
-            and the thinking behind the play.
-          </p>
-        </div>
-        <DesignDesk />
-        <details className="archive-details">
-          <summary>
-            Explore all original level sketches <PlusSign />
-          </summary>
-          <Gallery
-            items={mediaFor(19).slice(3)}
-            title="Rough Level Design archive"
-          />
-        </details>
-        <div className="document-strip">
-          <FileText size={28} strokeWidth={1.3} />
-          <div>
-            <span className="eyebrow">THE THINKING, DOCUMENTED</span>
-            <h3>Go beyond the finished game.</h3>
-          </div>
-          <a className="text-link" href="#project-wobble-bomber">
-            Design documents live in each project <ArrowDownRight size={19} />
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PlusSign() {
-  return (
-    <span aria-hidden className="plus-sign">
-      +
-    </span>
-  );
+  return <section id="process" tabIndex={-1} data-destination className="design-lab paper-surface" aria-labelledby="lab-title"><div className="atlas-container">
+    <div className="section-entry"><span className="annotation">02 / THE DESIGN LAB</span><span className="annotation">FROM IDEA TO INTERACTION</span></div>
+    <div className="lab-heading"><h2 id="lab-title">Thinking<br />in play.</h2><p>A closer look at the process.<br />Original sketches, rough level designs, and the documentation behind the work.</p></div>
+    <DesignLab />
+    <a href="#about" className="section-onward">Meet the designer behind the work<ArrowDownRight size={21} /></a>
+  </div></section>;
 }
 
 export function About() {
-  return (
-    <section id="about" tabIndex={-1} className="about-section section-pad">
-      <div className="wrap">
-        <Reveal className="about-intro">
-          <div>
-            <span className="eyebrow">Meet the mind behind the mechanics</span>
-            <h2>
-              A little logic.
-              <br />
-              <span className="blue">A lot of curiosity.</span>
-            </h2>
-            <span className="about-signature">
-              Aashay Hedaoo<span>Game &amp; Level Designer</span>
-            </span>
-          </div>
-          <div className="bio-copy">
-            <span className="eyebrow">{source[1].texts[1]}</span>
-            <p className="original-copy">{biography}</p>
-            <a
-              className="text-link"
-              href={linkedin}
-              target="_blank"
-              rel="noreferrer"
-            >
-              More on LinkedIn <ArrowUpRight size={18} />
-            </a>
-          </div>
-        </Reveal>
-        <div className="achievement-heading">
-          <span className="eyebrow">{source[5].texts[0]}</span>
-          <span className="mono">THE IMPACT OF PLAY</span>
-        </div>
-        <div className="achievements">
-          {source[5].texts.slice(1).map((t, i) => (
-            <Reveal key={t} className="achievement">
-              <span className="mono achievement-index">0{i + 1} /</span>
-              <h3>{t.split("\n")[0]}</h3>
-              <p>{t.split("\n").slice(1).join("\n")}</p>
-            </Reveal>
-          ))}
-        </div>
-        <div className="experience-layout">
-          <div>
-            <span className="eyebrow">THE JOURNEY SO FAR</span>
-            <h3 className="subheading">Work Experience</h3>
-            <p>
-              From individual levels
-              <br />
-              to complete gameplay systems.
-            </p>
-          </div>
-          <div className="timeline">
-            {[3, 4].map((s) => (
-              <article className="timeline-item" key={s}>
-                <div className="timeline-top">
-                  <span className="mono">{source[s].texts[1]}</span>
-                  <span className="mono">{source[s].texts[2]}</span>
-                </div>
-                <h4>{source[s].texts[0]}</h4>
-                <p className="role">{source[s].texts[3]}</p>
-                <details>
-                  <summary>
-                    Responsibilities <PlusSign />
-                  </summary>
-                  <div className="responsibilities">
-                    {source[s].texts
-                      .slice(4)
-                      .filter((t) => t !== "Work Experience")
-                      .map((t, i) => (
-                        <p key={i} className="original-copy">
-                          {t}
-                        </p>
-                      ))}
-                  </div>
-                </details>
-              </article>
-            ))}
-          </div>
-        </div>
-        <div className="skills-layout">
-          <div>
-            <span className="eyebrow">THE TOOLKIT</span>
-            <h3 className="subheading">{source[20].texts[0]}</h3>
-            <details className="skill-index">
-              <summary>
-                {source[2].texts[0]} index <PlusSign />
-              </summary>
-              <p>{source[2].texts.slice(1).join(" · ")}</p>
-            </details>
-          </div>
-          <div className="skill-groups">
-            {[4, 1, 2, 3].map((label, i) => (
-              <div key={label}>
-                <h4>{source[20].texts[label]}</h4>
-                <ul>
-                  {source[20].texts[5 + i].split("\n").map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="tools">
-          <span className="eyebrow">{source[21].texts[6]}</span>
-          {source[21].texts.slice(0, 6).map((t, i) => (
-            <span className="tool" key={t}>
-              <Image
-                src={mediaFor(21)[i].src}
-                alt=""
-                width={mediaFor(21)[i].width}
-                height={mediaFor(21)[i].height}
-                sizes="44px"
-              />
-              {t}
-            </span>
-          ))}
-        </div>
-        <Reveal className="offscreen">
-          <div className="offscreen-copy">
-            <span className="eyebrow">WHEN THE SCREEN IS OFF</span>
-            <h3>
-              Still making.
-              <br />
-              Still exploring.
-            </h3>
-            <details>
-              <summary>
-                {source[24].texts[0]} <PlusSign />
-              </summary>
-              {source[24].texts.slice(1).map((t) => (
-                <p className="original-copy" key={t}>
-                  {t}
-                </p>
-              ))}
-            </details>
-          </div>
-          <div className="artwork-preview">
-            <Gallery items={mediaFor(25).slice(0, 2)} title="Sketches" />
-            <span className="mono">
-              {source[25].texts[0]} / FROM MY PERSONAL SKETCHBOOK
-            </span>
-          </div>
-        </Reveal>
-        <details className="archive-details art-archive">
-          <summary>
-            Open the complete sketchbook <PlusSign />
-          </summary>
-          <Gallery
-            items={[...mediaFor(25).slice(2), ...mediaFor(26)]}
-            title="Personal artwork"
-          />
-        </details>
-      </div>
-    </section>
-  );
+  return <section id="about" tabIndex={-1} data-destination className="designer-section paper-surface" aria-labelledby="designer-title"><div className="atlas-container exhibition-layout">
+    <aside className="exhibition-margin"><span className="annotation">03</span><span className="annotation">THE DESIGNER</span><span className="margin-route" aria-hidden="true" /></aside>
+    <div className="designer-content">
+      <div className="designer-heading"><span className="annotation">{source[0].texts[0]}</span><h2 id="designer-title">Aashay<br />Hedaoo.</h2><p>Game &amp; Level Designer</p></div>
+      <div className="biography"><span className="annotation">PROFILE / {source[1].texts[1]}</span><div>{biography.split("\n").map((text, i) => <p key={i}>{text}</p>)}<a className="route-link" href={linkedin} target="_blank" rel="noreferrer">Connect on LinkedIn<ArrowUpRight size={18} /></a></div></div>
+      <section className="designer-record" aria-labelledby="experience-title"><div className="record-heading"><span className="annotation">THE PROFESSIONAL JOURNEY</span><h3 id="experience-title">Work Experience</h3></div>
+        <div className="experience-timeline">{[3, 4].map((section) => <article key={section} className="experience-entry"><span className="timeline-stop" aria-hidden="true" /><div className="experience-dates"><span>{source[section].texts[1]}</span><span>{source[section].texts[2]}</span></div><h4>{source[section].texts[0]}</h4><p className="experience-role">{source[section].texts[3]}</p><details><summary>Responsibilities<PlusMark /></summary><div className="responsibility-copy">{source[section].texts.slice(4).filter((text) => text !== "Work Experience").map((text, i) => <p key={i}>{text}</p>)}</div></details></article>)}</div>
+      </section>
+      <section className="designer-record" aria-labelledby="achievements-title"><div className="record-heading"><span className="annotation">CONTRIBUTIONS &amp; MILESTONES</span><h3 id="achievements-title">{source[5].texts[0]}</h3></div><div className="achievement-register">{source[5].texts.slice(1).map((text, i) => <article key={i}><span className="annotation">{String(i + 1).padStart(2, "0")}</span><div><h4>{text.split("\n")[0]}</h4><p>{text.split("\n").slice(1).join("\n")}</p></div></article>)}</div></section>
+      <section className="designer-record" aria-labelledby="skills-title"><div className="record-heading"><span className="annotation">DESIGN PRACTICE</span><h3 id="skills-title">{source[20].texts[0]}</h3></div><div className="expertise-columns">{[4, 1, 2, 3].map((label, i) => <div key={label}><h4>{source[20].texts[label]}</h4><ul>{source[20].texts[5 + i].split("\n").map((text) => <li key={text}>{text}</li>)}</ul></div>)}</div><div className="text-register"><h4>{source[21].texts[6]}</h4><p>{source[21].texts.slice(0, 6).join(" / ")}</p></div><details className="skill-register"><summary>{source[2].texts[0]} index<PlusMark /></summary><p>{source[2].texts.slice(1).join(" · ")}</p></details></section>
+      <section className="designer-record" aria-labelledby="interests-title"><div className="record-heading"><span className="annotation">BEYOND THE LEVEL</span><h3 id="interests-title">{source[24].texts[0]}</h3></div><div className="interests-copy">{source[24].texts.slice(1).map((text, i) => <p key={i}>{text}</p>)}</div><details className="sketchbook"><summary>{source[25].texts[0]} / The personal sketchbook<PlusMark /></summary><Gallery items={[...mediaFor(25), ...mediaFor(26)]} title="Personal artwork" /></details></section>
+    </div>
+  </div></section>;
 }
 
+function PlusMark() { return <span className="plus-mark" aria-hidden="true">+</span>; }
+
 export function Contact() {
-  return (
-    <footer id="contact" tabIndex={-1} className="contact-section dark-section">
-      <div className="wrap">
-        <Reveal>
-          <span className="eyebrow">Have something in mind?</span>
-          <div className="contact-heading">
-            <h2>
-              Let’s make
-              <br />
-              some play.
-            </h2>
-            <p className="contact-original">{source[0].texts[2]}</p>
-            <MagneticLink
-              className="contact-arrow magnetic"
-              cursor="Say hello"
-              href={`mailto:${email}`}
-              label="Email Aashay Hedaoo"
-            >
-              <ArrowUpRight strokeWidth={1.2} />
-            </MagneticLink>
-          </div>
-          <div className="contact-details">
-            <a className="contact-email" href={`mailto:${email}`}>
-              {email}
-              <ArrowUpRight size={25} />
-            </a>
-            <div>
-              <a href={linkedin} target="_blank" rel="noreferrer">
-                LinkedIn
-                <ArrowUpRight size={17} />
-              </a>
-              <a href={`tel:+91${source[27].texts[2]}`}>
-                {source[27].texts[2]}
-                <ArrowUpRight size={17} />
-              </a>
-            </div>
-          </div>
-        </Reveal>
-        <div className="footer-bottom">
-          <span>
-            © {new Date().getFullYear()} {source[27].texts[3]}
-          </span>
-          <span className="mono">{source[27].texts[0]} FOR PLAYING ALONG.</span>
-          <a href="#home">
-            Back to top <ArrowUp size={16} />
-          </a>
-        </div>
-      </div>
-    </footer>
-  );
+  return <footer id="contact" tabIndex={-1} data-destination className="final-destination" aria-labelledby="contact-title"><div className="atlas-container">
+    <div className="section-entry"><span className="annotation">04 / FINAL DESTINATION</span><span className="annotation">THE NEXT CHAPTER STARTS HERE</span></div>
+    <svg className="final-route" viewBox="0 0 1000 160" fill="none" aria-hidden="true"><path d="M0 25H140C260 25 210 120 340 120H420C480 120 460 60 500 60" /><path d="M500 48l12 12-12 12-12-12z" /><circle cx="500" cy="60" r="3" /><path d="M515 60H1000" className="final-route-fade" /></svg>
+    <div className="contact-center"><span className="annotation">{source[0].texts[2]}</span><h2 id="contact-title">Let’s make the<br />next connection.</h2><a className="contact-address" href={`mailto:${email}`}><span>{email}</span><ArrowUpRight size={30} strokeWidth={1.3} /></a><div className="contact-coordinates"><a href={linkedin} target="_blank" rel="noreferrer">LinkedIn<ArrowUpRight size={16} /></a><span aria-hidden="true">/</span><a href={`tel:+91${source[27].texts[2]}`}>+91 {source[27].texts[2]}<ArrowUpRight size={16} /></a></div></div>
+    <div className="atlas-footer"><span>© {new Date().getFullYear()} {source[27].texts[3]}</span><span className="annotation">THE PLAY ATLAS / {source[27].texts[0]}</span><a href="#home">Return to the atlas<ArrowUp size={17} /></a></div>
+  </div></footer>;
 }
