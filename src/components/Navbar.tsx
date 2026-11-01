@@ -49,7 +49,7 @@ export function Navbar() {
     <header className={`${styles.header} ${editorialSans.className}`}>
       <nav className={styles.navigation} aria-label="Main navigation">
         <Link href="/" className={styles.brand} aria-label="Aashay Hedaoo — home" onClick={closeMenu}>
-          AH<span>.</span>
+          aashay<span>.</span>
         </Link>
         <div className={styles.links}>
           <div className={styles.primaryLinks}>

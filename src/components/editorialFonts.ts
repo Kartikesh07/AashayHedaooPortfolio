@@ -1,6 +1,6 @@
 import { Geist, Instrument_Serif } from "next/font/google";
 
-// Applied only by the hero and navigation; existing section fonts stay intact.
+// Applied only to the hero and navigation, preserving the rest of the portfolio.
 export const editorialSans = Geist({
   subsets: ["latin"],
   display: "swap",
