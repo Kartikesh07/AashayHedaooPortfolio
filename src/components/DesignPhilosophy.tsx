@@ -20,90 +20,87 @@ interface ProcessStage {
   quote: string;
 }
 
+// Editorial grouping of responsibilities and examples verified in the source.
 const STAGES: ProcessStage[] = [
   {
-    id: "discover",
-    step: "01",
-    title: "Discover",
-    subtitle: "Player Cognitive Mapping & Friction Analysis",
-    icon: Compass,
-    accent: "#F36B45",
-    coreQuestion: "What cognitive reward does the player crave, and where does mental fatigue set in?",
-    methodology: [
-      "Deconstruct player mental models and target demographic reaction reflexes.",
-      "Analyze competitor drop-off funnels and identify under-served emotional states.",
-      "Map player emotion curves across the first 30 seconds, 3 minutes, and 30 minutes of gameplay.",
-      "Establish non-negotiable mechanic constraints (e.g. 100% pizza theme, single bullet bounce limit)."
+    "id": "discover",
+    "step": "01",
+    "title": "Discover",
+    "subtitle": "Theme & Player Experience",
+    "icon": Compass,
+    "accent": "#F36B45",
+    "coreQuestion": "How can the theme create varied and engaging puzzles?",
+    "methodology": [
+      "Work within the project’s theme and available assets.",
+      "Combine logical deduction with unexpected solutions.",
+      "Consider player motivation alongside difficulty and progression."
     ],
-    caseStudyExample: {
-      game: "Pizza IQ: Brain Game",
-      action: "Identified that players felt cheated by abstract math puzzles, so all 180+ levels were reframed into humorous physical pizza-cutting dilemmas.",
-      metric: "78% completion through Menu 3"
+    "caseStudyExample": {
+      "game": "Pizza IQ",
+      "action": "Created and implemented pizza-themed logic puzzles using limited assets in inventive ways.",
+      "metric": "180+ puzzle levels"
     },
-    quote: "A game doesn't begin in the engine; it begins in the player's mind before they even touch the screen."
+    "quote": "Design emphasis: varied challenges within a consistent theme."
   },
   {
-    id: "prototype",
-    step: "02",
-    title: "Prototype",
-    subtitle: "Paper Blueprints & Rapid Physics Sandbox",
-    icon: Hammer,
-    accent: "#C8F17A",
-    coreQuestion: "Can this mechanic generate 50+ surprising variations without adding bloated rules?",
-    methodology: [
-      "Sketch rough level blueprints by hand on gridded paper to test spatial sightlines and focal hierarchy.",
-      "Build isolated Unity sandboxes to calibrate rigid body masses, rope elasticity, and angular thresholds.",
-      "Verify that the core mechanic is intrinsically fun in graybox mode with zero audio or visual polish.",
-      "Establish deterministic physics parameters so player failure is always perceived as fair."
+    "id": "prototype",
+    "step": "02",
+    "title": "Prototype",
+    "subtitle": "Mechanics & Level Structure",
+    "icon": Hammer,
+    "accent": "#C8F17A",
+    "coreQuestion": "How can the layout teach a mechanic through play?",
+    "methodology": [
+      "Create new game mechanics and rapid prototypes.",
+      "Explore platform, rope and obstacle arrangements through rough level designs.",
+      "Structure levels around environmental interactions."
     ],
-    caseStudyExample: {
-      game: "Mr. Bullet (Detective IQ 1)",
-      action: "Built mathematical ricochet reflection matrices to ensure single-bullet trajectories were 100% deterministic and free of chaotic infinite loops.",
-      metric: "400+ progressive stages authored"
+    "caseStudyExample": {
+      "game": "Mr. Bullet · Detective IQ",
+      "action": "Designed and implemented progressively structured levels using ricochets, bombs and breakable planks.",
+      "metric": "400+ levels"
     },
-    quote: "If a level isn't compelling as white boxes and simple geometry, no amount of particle effects will save it."
+    "quote": "Design emphasis: build mechanical understanding through level progression."
   },
   {
-    id: "playtest",
-    step: "03",
-    title: "Playtest",
-    subtitle: "Blind Observation & GameAnalytics Cohorts",
-    icon: Users,
-    accent: "#F36B45",
-    coreQuestion: "Where do players look first, what false clues mislead them, and why do they quit?",
-    methodology: [
-      "Conduct silent blind playtesting sessions without providing any verbal explanations or guidance.",
-      "Track first-tap heatmaps to detect misleading background visual noise and false affordances.",
-      "Monitor retry rates: calibrate standard stages to 18–25% retry windows and boss stages to 35–45%.",
-      "Observe body language and facial expressions during fail-states to ensure failure evokes amusement, not anger."
+    "id": "playtest",
+    "step": "03",
+    "title": "Playtest",
+    "subtitle": "Testing & Iteration",
+    "icon": Users,
+    "accent": "#F36B45",
+    "coreQuestion": "How can testing and iteration improve the player experience?",
+    "methodology": [
+      "Test new mini-games and features.",
+      "Balance progression and refine gameplay through iteration.",
+      "Use analytics to inform gameplay and retention improvements."
     ],
-    caseStudyExample: {
-      game: "Detective IQ 2 (Eraser Loop)",
-      action: "Observed players tapping frantically when stuck on disguise puzzles; introduced micro-jiggle animations to incorrect taps to redirect attention.",
-      metric: "-26% rage-quit drop on Level 80-120"
+    "caseStudyExample": {
+      "game": "Detective IQ 3",
+      "action": "Combined progression balancing, testing and continuous iteration with mini-game design, animations and UI assets.",
+      "metric": "End-to-end mini-game design"
     },
-    quote: "Players are never wrong. If a player misinterprets an obstacle, the level designer failed to communicate the rule."
+    "quote": "Design emphasis: testing and iteration support a polished experience."
   },
   {
-    id: "refine",
-    step: "04",
-    title: "Refine",
-    subtitle: "Micro-Tolerances & Retention Architecture",
-    icon: Sliders,
-    accent: "#17231F",
-    coreQuestion: "How do we stretch mechanical depth to keep players engaged across hundreds of levels?",
-    methodology: [
-      "Schedule new mechanic introductions precisely every 20–25 levels to reset dopamine and combat fatigue.",
-      "Tune non-verbal tutorial pacing so advanced techniques are discovered organically without text prompts.",
-      "Balance boss level intervals (1 boss per 5 stages) to create predictable milestone achievements.",
-      "Polish celebratory micro-interactions, particle timings, and tactile audio-haptic feedback."
+    "id": "refine",
+    "step": "04",
+    "title": "Refine",
+    "subtitle": "Difficulty & Learning Through Play",
+    "icon": Sliders,
+    "accent": "#17231F",
+    "coreQuestion": "How can new mechanics arrive at a pace that supports player learning?",
+    "methodology": [
+      "Introduce mechanics gradually through a smooth difficulty curve.",
+      "Teach advanced strategies without explicit instruction.",
+      "Use milestone challenges to sustain motivation."
     ],
-    caseStudyExample: {
-      game: "Detective IQ 1 & 2 High-Volume Loops",
-      action: "Surgically tuned level difficulty curves across 500 levels, structuring mechanic hand-offs so players naturally learned advanced momentum transfer.",
-      metric: "0.5% retention at Level 400 (Top 1% benchmark)"
+    "caseStudyExample": {
+      "game": "Detective IQ 2 · Eraser",
+      "action": "Structured a 500-level progression around gradual mechanic introductions and learning through play.",
+      "metric": "500-level progression"
     },
-    quote: "True retention is crafted through respect for the player's intelligence and continuous incremental mastery."
+    "quote": "Design emphasis: balance challenge with the player’s developing skill."
   }
 ];
 
@@ -129,8 +126,8 @@ export function DesignPhilosophy() {
             </h2>
           </div>
           <p className="text-sm md:text-base text-[#667169] max-w-md font-sans">
-            A disciplined, data-informed 4-stage pipeline that bridges player psychology,
-            paper prototyping, telemetry cohort analytics, and mechanical retention.
+            Explore the design responsibilities behind the work: mechanics,
+            rough layouts, testing, progression and player experience.
           </p>
         </div>
 
@@ -250,7 +247,7 @@ export function DesignPhilosophy() {
                 </p>
 
                 <div className="pt-3 border-t border-[#2F453E] flex items-center justify-between">
-                  <span className="font-mono text-[11px] text-[#8E9B92]">Telemetry Impact:</span>
+                  <span className="font-mono text-[11px] text-[#8E9B92]">Portfolio evidence:</span>
                   <span className="font-mono text-xs font-bold text-[#C8F17A] bg-[#2F453E] px-2 py-0.5 rounded-xs">
                     {activeStage.caseStudyExample.metric}
                   </span>
@@ -259,7 +256,7 @@ export function DesignPhilosophy() {
 
               {/* Philosophy Quote */}
               <div className="p-5 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] text-xs font-sans italic text-[#667169] leading-relaxed">
-                &ldquo;{activeStage.quote}&rdquo;
+                {activeStage.quote}
               </div>
 
             </div>

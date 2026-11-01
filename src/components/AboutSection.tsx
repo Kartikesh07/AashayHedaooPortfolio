@@ -20,7 +20,7 @@ export function AboutSection() {
             </h2>
           </div>
           <p className="text-sm md:text-base text-[#667169] max-w-md font-sans">
-            Level designer and systems architect dedicated to understanding how players think,
+            Game and level designer interested in how players think,
             experiment, and find flow state in mobile gaming.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function AboutSection() {
                   Telemetry Discipline
                 </div>
                 <div className="text-sm text-[#17231F] font-medium">
-                  Using GameAnalytics cohort funnels to eliminate drop-off choke points.
+                  Using GameAnalytics to improve gameplay and retention.
                 </div>
               </div>
             </div>

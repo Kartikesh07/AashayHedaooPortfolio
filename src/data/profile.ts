@@ -39,14 +39,14 @@ export const PROFILE = {
       "My core value is the ability to generate high-quality, high-retention content that is finely tuned for player engagement and satisfaction without requiring heavy-handed hand-holding or verbose tutorials."
     ],
     passion: "I love reading psychology books to understand human decision-making, cognitive bias, and emotional feedback loops. My passion lies in crafting gameplay that seamlessly connects pure logic, emotional satisfaction, and player creativity.",
-    interests: "I am deeply drawn to strategy-driven games that push players to rethink assumptions. I obsessively analyze game mechanics, drop-off curves, player telemetry, and spatial ergonomics in level architecture.",
-    hobbies: "Outside the editor, I recharge through competitive outdoor sports, wilderness adventures, and long-distance motorcycling. Navigating unpredictable terrain directly inspires my dynamic spatial layouts and environmental obstacle pacing."
+    interests: "I am deeply drawn to strategy-driven games that push players to rethink assumptions. I enjoy analyzing game mechanics, player behavior and creative problem-solving.",
+    hobbies: "I enjoy outdoor games, adventure and long bike rides. Exploring new places helps me recharge and find inspiration for level layouts and challenges."
   },
   achievements: [
     {
       stat: "4+ Years",
       label: "Professional Game Design",
-      description: "Delivering high-retention mobile experiences across top-charting titles."
+      description: "Delivering game design across mobile platforms."
     },
     {
       stat: "10M+",
@@ -55,23 +55,23 @@ export const PROFILE = {
     },
     {
       stat: "1,500+",
-      label: "Levels Shipped",
-      description: "400+ shooter levels, 190+ puzzle/draw levels, 100+ animated levels, and 100+ parking puzzles."
+      label: "Levels Designed",
+      description: "Including 400+ shooter levels, 190+ puzzle/draw levels, 100+ animated puzzle levels and 100+ parking levels."
     },
     {
       stat: "0.5%",
       label: "Level 400 Retention",
-      description: "Sustaining high mechanical engagement in Mr. Bullet through organic non-verbal teaching."
+      description: "Reported user retention at Mr. Bullet level 400 in the original portfolio."
     },
     {
       stat: "20+",
       label: "Published Games",
-      description: "Live commercial releases distributed globally across Google Play Store & Apple App Store."
+      description: "Games available on Google Play Store and Apple App Store."
     },
     {
       stat: "Data-Driven",
-      label: "Telemetry & LiveOps",
-      description: "Leveraging GameAnalytics telemetry cohorts to continuously balance friction vs reward."
+      label: "Gameplay & Retention",
+      description: "Used GameAnalytics to improve gameplay and retention."
     }
   ] as Achievement[],
   experiences: [
@@ -81,11 +81,11 @@ export const PROFILE = {
       period: "June 2026 – Present",
       location: "Jodhpur, Rajasthan",
       responsibilities: [
-        "Leading end-to-end game design direction and mechanics creation for high-retention mobile titles.",
-        "Architecting complete gameplay systems, reward loops, and progressive difficulty balancing.",
-        "Directing level design workflows from rapid whitebox prototyping through global commercial release.",
-        "Balancing progression economies and mission structures using quantitative analytics.",
-        "Authoring comprehensive Game Design Documents (GDD) and Feature Technical Specifications."
+        "Leading game design direction and creating new mechanics.",
+        "Designing complete gameplay systems and balancing difficulty.",
+        "Designing levels from concept to release and rapidly prototyping ideas.",
+        "Progression balancing, mission design and data-driven improvements using analytics.",
+        "Writing feature documentation."
       ]
     },
     {
@@ -94,38 +94,38 @@ export const PROFILE = {
       period: "July 2022 – May 2026",
       location: "Nagpur, Maharashtra",
       responsibilities: [
-        "Designed and implemented 1,000+ commercial puzzle levels across flagship detective and logic franchises.",
-        "Engineered core gameplay loops, physics interactions, and non-verbal tutorial systems.",
-        "Designed live events, retention hooks, and progression balancing across Google Play and App Store releases.",
-        "Iterated rapidly on player telemetry using GameAnalytics to eliminate drop-off choke points.",
-        "Collaborated closely with 2D animators, programmers, and sound designers to ensure tactile game feel."
+        "Designed levels from concept to release across puzzle and logic games.",
+        "Designed complete gameplay systems and new game mechanics.",
+        "Worked on mission design, event design, difficulty and progression balancing.",
+        "Used analytics for data-driven gameplay improvements and retention.",
+        "Created feature documentation and rapid prototypes."
       ]
     }
   ] as Experience[],
   skillCategories: [
     {
       title: "Core Design",
-      skills: ["Game Design", "Gameplay Systems", "Level Architecture", "Puzzle Design", "Core Loop Modeling"]
+      skills: ["Game Design", "Gameplay Design", "Level Design", "Systems Design", "Puzzle Design"]
     },
     {
       title: "Player Experience",
-      skills: ["Difficulty Balancing", "Pacing & Flow", "Player Motivation", "Game Economy", "Event Design", "Quest Architecture"]
+      skills: ["Quest Design", "Event Design", "Player Motivation", "Game Economy", "Difficulty Balancing"]
     },
     {
       title: "Specializations",
-      skills: ["Physics-Based Mechanics", "Progression Modeling", "Non-Verbal Onboarding", "LiveOps Design", "Mission Structures"]
+      skills: ["Feature Design", "Mechanic Design", "Progression Design", "LiveOps", "Mission Design"]
     },
     {
       title: "Technical & Analytics",
-      skills: ["GameAnalytics Cohorts", "Player Retention Modeling", "Rapid Unity Prototyping", "GDD & LDD Authoring", "Balancing Spreadsheets"]
+      skills: ["Player Retention", "Analytics", "Content Design", "Rapid Prototyping", "Unity"]
     }
   ] as SkillCategory[],
   tools: [
     { name: "Unity", category: "Engine & Prototyping", iconName: "Gamepad2" },
-    { name: "GameAnalytics", category: "Telemetry & Cohorts", iconName: "BarChart3" },
+    { name: "GameAnalytics", category: "Gameplay Analytics", iconName: "BarChart3" },
     { name: "Photoshop", category: "2D Art & Level Mockups", iconName: "Palette" },
     { name: "Illustrator", category: "Vector & UI Asset Design", iconName: "Layers" },
-    { name: "MS Excel", category: "Economy & Balancing Models", iconName: "Table" },
+    { name: "MS Excel", category: "Spreadsheets", iconName: "Table" },
     { name: "Notion", category: "Game Design Documentation", iconName: "FileText" }
   ] as ToolItem[]
 };

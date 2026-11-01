@@ -1,544 +1,184 @@
+// Content audited against the original Canva portfolio on 2026-11-01.
+// Source sections, exact video matches and unresolved items: portfolio-audit.md.
+export const PORTFOLIO_SOURCE = "https://aashayhedaooportfolio.my.canva.site/";
+
+export interface ProjectImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+export interface GameplayVideo {
+  src: string;
+  poster: string;
+  title: string;
+  width: number;
+  height: number;
+}
+
 export interface Project {
   slug: string;
   title: string;
-  tagline: string;
   category: "LiveOps & Systems" | "Physics & Logic" | "Original Concepts";
+  status: "Published mobile game" | "Original design concept";
   role: string;
-  studio: string;
-  timeline: string;
-  platforms: string[];
-  metrics: {
-    label: string;
-    value: string;
-  }[];
-  heroVideo?: string;
-  heroPoster?: string;
-  heroImage?: string;
-  galleryImages: string[];
-  sketches?: string[];
   summary: string;
-  challenge: string;
-  playerExperience: string;
-  coreMechanics: {
-    title: string;
-    description: string;
-  }[];
+  contributions: string[];
+  coreMechanics: { title: string; description: string }[];
   designProcess: string[];
-  telemetryAndBalancing: string;
-  keyLearnings: string[];
-  links: {
-    playStore?: string;
-    appStore?: string;
-    gddDocument?: string;
-    lddDocument?: string;
+  challenge?: string;
+  playerExperience?: string;
+  results?: string[];
+  media: {
+    cover?: ProjectImage;
+    gameplayVideos: GameplayVideo[];
+    screenshots: ProjectImage[];
+    conceptArt: ProjectImage[];
+    levelSketches: ProjectImage[];
+    designDiagrams: ProjectImage[];
   };
-  lensBreakdown: {
-    playerExperience: string;
-    gameSystems: string;
-    designIteration: string;
-  };
+  links: { label: string; href: string }[];
+  sourceSections: string[];
 }
+
+const clip = (id: string, title: string, width = 406, height = 720): GameplayVideo => ({
+  src: `/videos/${id}.mp4`, poster: `/images/${id}-poster.jpg`, title, width, height,
+});
+const image = (id: string, alt: string, width: number, height: number): ProjectImage => ({ src: `/images/${id}`, alt, width, height });
+const emptyMedia = { gameplayVideos: [], screenshots: [], conceptArt: [], levelSketches: [], designDiagrams: [] };
 
 export const PROJECTS: Project[] = [
   {
-    slug: "detective-iq-3",
-    title: "Detective IQ 3",
-    tagline: "End-to-End Mechanics & Puzzle-Driven Mini-Game Architecture",
-    category: "LiveOps & Systems",
-    role: "Senior Game & Level Designer",
-    studio: "MindYourLogic Studios",
-    timeline: "2024 – 2026",
-    platforms: ["Google Play Store", "Apple App Store"],
-    metrics: [
-      { label: "Franchise Downloads", value: "10M+" },
-      { label: "New Mini-Games", value: "Multiple End-to-End" },
-      { label: "Animation & UI Assets", value: "Complete 2D Suite" }
-    ],
-    heroVideo: "/videos/VAG2aDeQqm4.mp4",
-    heroPoster: "/images/MAHRC1dK9uE.png",
-    heroImage: "/images/MAHRC1dK9uE.png",
-    galleryImages: ["/images/MAHRC1dK9uE.png"],
-    summary:
-      "Designed and executed multiple new flagship mini-games for Detective IQ 3, owning the full pipeline from whitebox mechanics and puzzle-driven level design to 2D animation integration and UI asset creation. The project prioritized tactile feedback loops and continuous progression balancing.",
-    challenge:
-      "Balancing the cognitive load for diverse casual player cohorts while introducing increasingly intricate detective logic puzzles. Players needed to feel clever without becoming frustrated by obscure lateral-thinking leaps.",
-    playerExperience:
-      "Every case was designed as a miniature emotional narrative arc: initial curiosity, observation of deceptive visual clues, a sudden 'aha!' realization, and immediate gratifying payoff.",
-    coreMechanics: [
-      {
-        title: "Forensic Evidence Deduction",
-        description:
-          "Multi-stage interaction loops requiring players to synthesize circumstantial visual details, witness contradictions, and hidden objects."
-      },
-      {
-        title: "Micro-Puzzle Interleaving",
-        description:
-          "Alternating between fast visual puzzles and deeper spatial reasoning stages to prevent mental fatigue across 30+ minute play sessions."
-      },
-      {
-        title: "Dynamic Hint Escalation",
-        description:
-          "Tiered hint system providing contextual nudges without spoiling the core deduction, keeping player pride intact."
-      }
-    ],
-    designProcess: [
-      "Deconstructed player drop-off telemetry from Detective IQ 1 & 2 to isolate high-friction clue formats.",
-      "Rapidly prototyped 30+ candidate mechanics on paper before selecting the top 8 highest-delight puzzle loops.",
-      "Created complete 2D character poses and clue visual assets to ensure visual clarity was mechanically unambiguous.",
-      "Iterated through 5 rounds of closed cohort playtesting, tuning clue discovery thresholds and confirmation animations."
-    ],
-    telemetryAndBalancing:
-      "Integrated GameAnalytics event funnels on each clue click. Levels with more than 3 invalid tap attempts before first clue discovery were redesigned to offer clearer affordance cues, improving day-7 franchise retention by 14%.",
-    keyLearnings: [
-      "Visual hierarchy is gameplay: if a clue blends into background decorative noise, players perceive it as unfair rather than challenging.",
-      "Reward cadence must match cognitive investment: difficult deductions demand longer celebratory micro-animations."
-    ],
-    links: {
-      playStore: "https://play.google.com/store/apps/details?id=com.mindyourlogic.brain.test.logic.puzzle.detective.iq3&hl=en",
-      appStore: "https://apps.apple.com/in/app/detective-iq3/id6754641677"
-    },
-    lensBreakdown: {
-      playerExperience:
-        "The cognitive loop is tuned for the 'detective triumph' emotion—giving players subtle visual breadcrumbs that make deductions feel earned rather than spoon-fed.",
-      gameSystems:
-        "Modular puzzle state machine where clue interactions trigger multi-variable logic checks, linking dialogue states, asset states, and progression gates.",
-      designIteration:
-        "Heatmap telemetry showed players tapping randomly when stuck; we introduced micro-reaction animations to incorrect taps to gently steer focus back to clues."
-    }
+    slug: "detective-iq-3", title: "Detective IQ 3", category: "LiveOps & Systems",
+    status: "Published mobile game", role: "Game & Level Design · Animation & UI",
+    summary: "Designed and executed new mini-games for Detective IQ 3, from mechanics and puzzle-driven level design to feature implementation, animation and UI assets.",
+    contributions: ["End-to-end mechanics, puzzle-driven level design and feature implementation.", "Character-design support, 2D character and gameplay animations, UI assets and core visual elements.", "Progression balancing, testing and continuous iteration."],
+    coreMechanics: [],
+    designProcess: ["Develop new mini-game mechanics and puzzle levels.", "Support implementation with character animation and UI assets.", "Balance progression, test and iterate on the player experience."],
+    media: { ...emptyMedia, cover: image("MAHRC1dK9uE.png", "Detective IQ 3 cover artwork", 340, 592) },
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.mindyourlogic.brain.test.logic.puzzle.detective.iq3&hl=en" },
+      { label: "App Store", href: "https://apps.apple.com/in/app/detective-iq3/id6754641677" },
+    ], sourceSections: ["PBmzmQnWstDlz0X1"],
   },
   {
-    slug: "krishna-stories",
-    title: "Krishna Stories Game",
-    tagline: "Multi-Map Systems, Narrative Integration & High-Retention Mini-Games",
-    category: "LiveOps & Systems",
-    role: "Lead Gameplay & Level Designer",
-    studio: "MindYourLogic Studios",
-    timeline: "2023 – 2025",
-    platforms: ["Google Play Store", "Apple App Store"],
-    metrics: [
-      { label: "Total Downloads", value: "1M+" },
-      { label: "Core Mini-Games", value: "Shoot, Cut & Save, Draw" },
-      { label: "Integrated Maps", value: "Multi-Hub World" }
-    ],
-    heroVideo: "/videos/VAHRCS4mmpM.mp4",
-    heroPoster: "/images/MAHRCRhwd4Q.png",
-    heroImage: "/images/MAHRCRhwd4Q.png",
-    galleryImages: ["/images/MAHRCRhwd4Q.png"],
-    summary:
-      "Designed and structured the core gameplay loop for Krishna Stories, integrating three distinct mini-game modes (Shoot, Cut & Save, and Draw) into an expansive multi-map narrative universe. Owned mechanics, pacing, difficulty curves, and reward economies.",
-    challenge:
-      "Seamlessly intertwining traditional cultural storytelling with varied mechanical puzzle loops (physics ricochet, rope tension cutting, and freeform line drawing) without breaking narrative immersion.",
-    playerExperience:
-      "Players traverse vibrant mythological landscapes, alternating between lighthearted narrative vignettes and skill-testing mini-games that embody Krishna's legendary wit, heroism, and playful trickster persona.",
+    slug: "krishna-stories", title: "Krishna Stories Game", category: "LiveOps & Systems",
+    status: "Published mobile game", role: "Game & Level Design",
+    summary: "Designed and structured Krishna’s core gameplay experiences, with diverse mini-games integrated across multiple maps. Owned the gameplay loop, content pacing, difficulty balancing and level progression.",
+    contributions: ["Defined mechanics and the complete gameplay loop.", "Structured mini-game content across multiple maps.", "Combined narrative integration, targeted rewards and retention-focused design."],
     coreMechanics: [
-      {
-        title: "Shoot & Ricochet Archery",
-        description:
-          "Physics-based projectile targeting utilizing reflective surfaces, breakable earthen pots, and environmental triggers to overcome demon obstacles."
-      },
-      {
-        title: "Cut & Save Physics",
-        description:
-          "Multi-rope tension manipulation where cutting sequence dictates gravity, momentum, and civilian rescue pathing."
-      },
-      {
-        title: "Protective Draw Barrier",
-        description:
-          "Freeform touch vector rendering that simulates structural mass to shield characters from falling stones and enemy projectiles."
-      }
+      { title: "Shoot", description: "Archery mini-game shown in the original gameplay footage." },
+      { title: "Cut Save", description: "Rope-cutting rescue mini-game shown in the original gameplay footage." },
+      { title: "Draw", description: "Drawing mini-game shown in the original gameplay footage." },
     ],
-    designProcess: [
-      "Mapped the overarching multi-map campaign progression, balancing difficulty spikes across alternating mini-game genres.",
-      "Built parametric physics sandboxes in Unity to calibrate rope elasticity, arrow bounce velocity, and ink stroke consumption.",
-      "Designed contextual reward loops (temple restorations, sacred feathers) that tie directly into player retention metrics.",
-      "Polished camera framing and dynamic zoom cues to celebrate spectacular physics chain reactions."
-    ],
-    telemetryAndBalancing:
-      "Paced mini-game rotation so high-precision shooting puzzles were consistently followed by creative, low-stress drawing challenges. This rhythm smoothed player burnout and achieved over 1M+ downloads with industry-leading session lengths.",
-    keyLearnings: [
-      "Genre-switching refreshes dopamine: players who hit a wall in precision aiming recover focus when switching to creative drawing.",
-      "Cultural reverence enhances player attachment: authentic thematic assets elevated casual puzzle mechanics into memorable narrative beats."
-    ],
-    links: {
-      playStore: "https://play.google.com/store/apps/details?id=com.mindyourlogic.krishnastories&hl=en",
-      appStore: "https://apps.apple.com/us/app/krishna-stories-game/id6779624620"
-    },
-    lensBreakdown: {
-      playerExperience:
-        "The rhythm oscillates between heroic action (archery precision) and compassionate protection (shield drawing), creating a rich emotional spectrum.",
-      gameSystems:
-        "Inter-connected economy connecting currency earned across 3 mini-games into a persistent map unlocking system with escalating chapter requirements.",
-      designIteration:
-        "Early rope physics caused civilian ragdolls to snag unpredictably; adjusted bounding box dampening and added guide arcs to ensure fair fail-states."
-    }
+    designProcess: ["Define mechanics and content pacing for each mini-game.", "Balance difficulty and progression across the maps.", "Connect narrative and rewards to sustain player motivation."],
+    playerExperience: "A varied mini-game experience with a balanced gameplay flow and continued motivation to progress.",
+    media: { ...emptyMedia, cover: image("MAHRCRhwd4Q.png", "Krishna Stories Game cover artwork", 340, 592), gameplayVideos: [clip("VAHRCS4mmpM", "Shoot", 576, 1280), clip("VAHRCa9RWbk", "Cut Save", 576, 1280), clip("VAHRCfVtcWA", "Draw", 576, 1280)] },
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.mindyourlogic.krishnastories&hl=en" },
+      { label: "App Store", href: "https://apps.apple.com/us/app/krishna-stories-game/id6779624620" },
+    ], sourceSections: ["PBc48HWV6DDS7TyT", "PB4Y7hd0vdQrkshY"],
   },
   {
-    slug: "detective-iq-2",
-    title: "Detective IQ 2: The Eraser's Pursuit",
-    tagline: "500-Level Progressive Difficulty Architecture & Non-Verbal Mastery",
-    category: "Physics & Logic",
-    role: "Senior Level & Systems Designer",
-    studio: "MindYourLogic Studios",
-    timeline: "2023 – 2024",
-    platforms: ["Google Play Store", "Apple App Store"],
-    metrics: [
-      { label: "Levels Designed", value: "500 Unique Stages" },
-      { label: "Level 500 Retention", value: "0.2% Sustained" },
-      { label: "Boss Level Cadence", value: "Every 5 Stages" }
-    ],
-    heroVideo: "/videos/VAG2ad23V64.mp4",
-    heroPoster: "/images/VAG2ad23V64-poster.jpg",
-    heroImage: "/images/VAG2ad23V64-poster.jpg",
-    galleryImages: ["/images/VAG2ad23V64-poster.jpg", "/images/VAG2aKsJHMk-poster.jpg", "/images/VAG2aX3RkiM-poster.jpg"],
-    summary:
-      "Crafted an expansive 500-level suite for Detective IQ 2 centered around the Eraser mechanic and Cut Rope physics. Meticulously designed the non-verbal learning curve to teach advanced cognitive strategies purely through puzzle topology, achieving 0.2% retention at Level 500.",
-    challenge:
-      "Keeping players engaged through 500 consecutive levels without repetitive monotony, while teaching increasingly abstract eraser logic without a single tutorial dialogue box.",
-    playerExperience:
-      "Pure discovery. Players test hypotheses with their fingertip, watching layers of reality peel away to reveal subversive truths. Every fifth level introduces a high-stakes boss challenge that tests mastery under elevated cognitive pressure.",
+    slug: "detective-iq-2", title: "Detective IQ 2", category: "Physics & Logic",
+    status: "Published mobile game", role: "Game & Level Design",
+    summary: "Designed levels for the Eraser puzzle loop in The Eraser’s Pursuit, structuring progression around a smooth difficulty curve and learning through play. The portfolio also presents Cut Rope and Bullet gameplay alongside this work.",
+    contributions: ["Structured the 500-level Eraser progression to introduce mechanics gradually.", "Designed rope-cutting puzzles around momentum, environmental physics and chain reactions.", "Presented a mobile ricochet shooter with 200+ levels, environmental bombs, switches and movable planks."],
     coreMechanics: [
-      {
-        title: "Subtractive Eraser Layering",
-        description:
-          "Targeted touch erasure that strips disguise layers, uncovers hidden culprits, and disrupts structural supports in physics puzzles."
-      },
-      {
-        title: "Organic Non-Verbal Onboarding",
-        description:
-          "Puzzle layouts that visually constrain invalid options in early stages, naturally channeling player intuition toward breakthrough mechanics."
-      },
-      {
-        title: "5-Stage Boss Cadence",
-        description:
-          "A structured pacing rhythm: 4 developmental puzzle variations culminating in a complex composite boss stage rewarding strategic synthesis."
-      }
+      { title: "Eraser puzzles", description: "Gradual mechanic introductions teach players without explicit instruction." },
+      { title: "Cut Rope", description: "Cut ropes to guide a civilian to safety. A boss level follows every five puzzles." },
+      { title: "Bullet", description: "Eliminate enemies with a ricocheting bullet and environmental chain reactions." },
     ],
-    designProcess: [
-      "Structured a comprehensive 500-level roadmap dividing mechanics into 10 thematic worlds of 50 levels each.",
-      "Built spreadsheet difficulty curves factoring clue count, false affordances, and cognitive distraction elements.",
-      "Authored the complete Cut Rope Game Design Document (GDD) detailing rope tension, blade interactions, and momentum transfer.",
-      "Iterated through 200+ playtester recording sessions to track first-tap heatmaps and eradicate deceptive ambiguity."
-    ],
-    telemetryAndBalancing:
-      "Maintained a strictly controlled fail-rate window of 18–25% on standard levels and 35–45% on boss stages. This preserved the elusive 'flow zone', sustaining an unprecedented 0.2% retention rate all the way to level 500.",
-    keyLearnings: [
-      "Players love feeling smart through subtraction: removing elements to solve a problem triggers deeper cognitive satisfaction than adding elements.",
-      "A predictable boss cadence creates powerful micro-goals, pulling players through 'just one more level' sessions."
-    ],
-    links: {
-      playStore: "https://play.google.com/store/search?q=detective%20iq%202&c=apps&hl=en_IN",
-      appStore: "https://apps.apple.com/om/app/detective-iq-2-catch-thieves/id6736873794",
-      gddDocument: "https://1drv.ms/w/c/ae1b7f9ffb0852ff/EVQyeK8HqdFEhia_YfZL4jwBtkWphVpklK_j6ljDa82PRQ?e=BbdKw1"
+    designProcess: ["Build a seamless difficulty curve across the Eraser levels.", "Introduce advanced strategies through the progression itself.", "Use periodic boss puzzles as milestones in Cut Rope."],
+    playerExperience: "A steady flow of challenge and discovery, with new strategies learned naturally through play.",
+    results: ["The original portfolio reports approximately 0.2% of users reaching Eraser level 500. This is a level-reach figure, not a day-based retention improvement."],
+    media: { ...emptyMedia,
+      cover: image("VAG2aDeQqm4-poster.jpg", "Detective IQ 2 gameplay still", 406, 720),
+      gameplayVideos: [clip("VAG2aDeQqm4", "Detective IQ 2 overview"), clip("VAG2ad23V64", "Eraser level gameplay"), clip("VAG2aKsJHMk", "Cut Rope gameplay"), clip("VAG2aX3RkiM", "Bullet gameplay", 324, 720)],
     },
-    lensBreakdown: {
-      playerExperience:
-        "The feeling of outsmarting the level creator: uncovering an unexpected layer behind the villain's façade delivers instant emotional delight.",
-      gameSystems:
-        "Dual-canvas rendering where the erase mask texture coordinates compute overlap ratios against target collision zones in real time.",
-      designIteration:
-        "Monitored level 120-150 telemetry drops; split complex multi-eraser puzzles into sequential single-stroke puzzles to restore confidence before introducing combined mechanics."
-    }
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/search?q=detective%20iq%202&c=apps&hl=en_IN" },
+      { label: "App Store", href: "https://apps.apple.com/om/app/detective-iq-2-catch-thieves/id6736873794" },
+      { label: "Cut Rope design document", href: "https://1drv.ms/w/c/ae1b7f9ffb0852ff/EVQyeK8HqdFEhia_YfZL4jwBtkWphVpklK_j6ljDa82PRQ?e=BbdKw1" },
+      { label: "Bullet design document", href: "https://1drv.ms/w/c/ae1b7f9ffb0852ff/ERtf2dikh7ZCjoDQ3t9AqyoBw3X_LWHARejmmklvHqm5mQ?e=ksyQL0" },
+    ], sourceSections: ["PBXdzcB5QlpXSP9j", "PBVbBJN3dLlhTNN2", "PB5CQkGDgDnkzHsy", "PBxc7bBk6KnS2db4"],
   },
   {
-    slug: "detective-iq-1",
-    title: "Detective IQ 1: Ricochet Shooter & Draw to Save",
-    tagline: "400+ Shooter Levels, 0.5% Level-400 Retention & 20 Distinct Mini-Games",
-    category: "Physics & Logic",
-    role: "Core Content & Systems Designer",
-    studio: "MindYourLogic Studios",
-    timeline: "2022 – 2023",
-    platforms: ["Google Play Store", "Apple App Store"],
-    metrics: [
-      { label: "Shooter Levels", value: "400+ Levels" },
-      { label: "Level 400 Retention", value: "0.5% Verified" },
-      { label: "Draw to Save Levels", value: "200+ Levels" },
-      { label: "Mini-Games Designed", value: "20 Unique Modes" }
-    ],
-    heroVideo: "/videos/VAG3e9kp7K0.mp4",
-    heroPoster: "/images/VAG3e04kpq4-poster.jpg",
-    heroImage: "/images/VAG3e04kpq4-poster.jpg",
-    galleryImages: ["/images/VAG3e04kpq4-poster.jpg", "/images/VAG3e4kIUBU-poster.jpg", "/images/VAG3e_Kg1SI-poster.jpg"],
-    summary:
-      "As core content designer, created and balanced high-volume content across 20 distinct mini-games. Spearheaded the 400-level physics ricochet shooter (Mr. Bullet loop) achieving an exceptional 0.5% retention at level 400, alongside 200+ Draw to Save creative physics puzzles and 50+ Detective Cases.",
-    challenge:
-      "Creating 400 distinct single-bullet trajectory puzzles that constantly introduce fresh spatial interactions (explosive barrels, rotating mirrors, movable counterweights) without feeling repetitive.",
-    playerExperience:
-      "Tactile, mechanical satisfaction. Players calculate bank shots like billiards masters, releasing the bullet to watch a glorious domino effect of physics destruction unfold across the level.",
+    slug: "detective-iq-1", title: "Detective IQ", category: "Physics & Logic",
+    status: "Published mobile game", role: "Core Content & Level Design",
+    summary: "Created and implemented content across 20 mini-games in Detective IQ 1, including Mr. Bullet, Draw to Save, detective cases and Flashback observation puzzles.",
+    contributions: ["Designed and implemented 400+ Mr. Bullet levels and 200+ Draw to Save levels.", "Designed 50–60 detective-case levels involving hidden clues and evidence deduction.", "Developed 30–40 Flashback levels using rewind and fast-forward to reveal visual evidence.", "Created 50–60 logical gameplay levels for individual mini-games, as described in the original portfolio."],
     coreMechanics: [
-      {
-        title: "Calculated Ricochet Vectoring",
-        description:
-          "Specular bullet reflections off steel surfaces, testing player angle calculation and anticipation of bouncing trajectories."
-      },
-      {
-        title: "Environmental Kinetic Triggers",
-        description:
-          "Physics props: swinging chandeliers, TNT barrels, rolling boulders, and counter-weighted elevators activated by bullet impact."
-      },
-      {
-        title: "Draw to Save Structural Inking",
-        description:
-          "Rigid body generation from player finger gestures, testing center-of-mass balance against relentless bee swarms and falling spikes."
-      },
-      {
-        title: "Time-Rewind Flashback Cases",
-        description:
-          "Observation puzzles with scrubbing timeline controls to catch fleeting micro-details obscured during real-time movement."
-      }
+      { title: "Mr. Bullet", description: "Use a calculated bullet and environmental interactions, including bombs and breakable planks, to eliminate enemies." },
+      { title: "Draw to Save", description: "Draw structures that protect a civilian from environmental hazards." },
+      { title: "Detective cases & Flashback", description: "Find hidden clues, synthesize evidence and control time to inspect fleeting details." },
     ],
-    designProcess: [
-      "Formulated a rigorous mathematical grid for bullet ricochet angles to guarantee single-solution deterministic consistency.",
-      "Authored the complete Bullet Shooter Game Design Document (GDD) specifying kinetic energy, surface friction, and ricochet dissipation.",
-      "Developed 200+ Draw to Save stages, testing structural integrity under diverse physics loads and simulated player drawing styles.",
-      "Conducted weekly cohort data reviews in GameAnalytics to trim outlier stages with abnormal retry spikes."
-    ],
-    telemetryAndBalancing:
-      "Achieved a verified 0.5% retention at level 400 through razor-sharp difficulty pacing. Every 25 levels introduced a new interactive prop type, resetting player curiosity before increasing geometric complexity.",
-    keyLearnings: [
-      "Physics is the ultimate content multiplier: when level elements follow consistent physical laws, player failure is accepted as fair experimentation.",
-      "Ink economy in drawing puzzles forces player elegance: limiting draw length turns simple obstacle blocking into an engineering art form."
-    ],
-    links: {
-      playStore: "https://play.google.com/store/search?q=detective+iq&c=apps&hl=en_IN",
-      appStore: "https://apps.apple.com/in/app/detective-iq-brain-games/id6443900014",
-      gddDocument: "https://1drv.ms/w/c/ae1b7f9ffb0852ff/ERtf2dikh7ZCjoDQ3t9AqyoBw3X_LWHARejmmklvHqm5mQ?e=ksyQL0"
+    designProcess: ["Structure content progressively for mechanical mastery.", "Teach environmental interactions through increasingly complex levels.", "Vary hazards to encourage creative drawing and spatial reasoning."],
+    playerExperience: "Varied puzzle content that builds player skill through discovery, observation and creative problem-solving.",
+    results: ["The original portfolio reports 0.5% user retention at Mr. Bullet level 400. It does not supply a day-based cohort definition or a benchmark comparison."],
+    media: { ...emptyMedia,
+      cover: image("VAG3e04kpq4-poster.jpg", "Detective IQ cases and Flashback gameplay still", 406, 720),
+      gameplayVideos: [clip("VAG3e04kpq4", "Detective cases"), clip("VAG3e_Kg1SI", "Flashback"), clip("VAG3e9kp7K0", "Mr. Bullet gameplay", 1280, 720), clip("VAG3e4kIUBU", "Draw to Save gameplay")],
     },
-    lensBreakdown: {
-      playerExperience:
-        "The suspense between releasing the bullet and observing its final bounce creates an irresistible dopamine loop of anticipation and relief.",
-      gameSystems:
-        "Deterministic 2D Raycast and RigidBody2D simulation tuned with custom angular thresholds to prevent chaotic infinite bounces.",
-      designIteration:
-        "Analyzed level 180 drop-off where TNT barrels were triggered too easily; increased barrel activation velocity threshold to mandate intentional bank shots."
-    }
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/search?q=detective+iq&c=apps&hl=en_IN" },
+      { label: "App Store", href: "https://apps.apple.com/in/app/detective-iq-brain-games/id6443900014" },
+    ], sourceSections: ["PBGHZd8sMtKPYxT3", "PBCgH06ZNX1yss3R", "PBT2yS9wDVSK13qk", "PBKq0dzyy6tzH8Sm"],
   },
   {
-    slug: "pizza-iq",
-    title: "Pizza IQ: Brain Game",
-    tagline: "180+ High-Retention Thematic Logic Puzzles & Spatial Constraints",
-    category: "Physics & Logic",
-    role: "Lead Puzzle & Level Designer",
-    studio: "MindYourLogic Studios",
-    timeline: "2023",
-    platforms: ["Google Play Store", "Apple App Store"],
-    metrics: [
-      { label: "Thematic Levels", value: "180+ Unique Puzzles" },
-      { label: "Theme Constraint", value: "100% Pizza Themed" },
-      { label: "Cognitive Mechanics", value: "Spatial & Deduction" }
-    ],
-    heroVideo: "/videos/VAG2azvU0lc.mp4",
-    heroPoster: "/images/VAG2azvU0lc-poster.jpg",
-    heroImage: "/images/VAG2azvU0lc-poster.jpg",
-    galleryImages: [
-      "/images/MAG3i0nkRIg.jpg",
-      "/images/MAG3i26IaKU.jpg",
-      "/images/MAG3i3CIHoo.jpg",
-      "/images/MAG3i3LAI1I.jpg"
-    ],
-    sketches: [
-      "/images/MAG3ixvN7LA.png",
-      "/images/MAG3i4rsDnI.png",
-      "/images/MAG3i2rJoXM.png",
-      "/images/MAG3iwVOsag.png"
-    ],
-    summary:
-      "Solely responsible for designing and implementing 180+ unique puzzle levels for Pizza IQ: Brain Game. The core creative challenge was strictly adhering to a culinary pizza theme while continuously requiring fresh logical deduction, spatial reasoning, and out-of-the-box thinking.",
-    challenge:
-      "Creating nearly two hundred diverse logic puzzles using limited, thematically constrained culinary assets (dough, toppings, pizza cutters, ovens, delivery boxes) without repeating mechanics.",
-    playerExperience:
-      "Humorous, brain-bending culinary whimsy. Players encounter bizarre logic dilemmas—cutting pizza into impossible fractions, baiting mischievous pizza thieves, and balancing toppings under wacky physical constraints.",
-    coreMechanics: [
-      {
-        title: "Topological Pizza Slicing",
-        description:
-          "Geometric puzzle mechanics requiring players to bisect complex topping distributions with a limited number of straight cuts."
-      },
-      {
-        title: "Culinary Lateral Thinking",
-        description:
-          "Subverting expectations where standard physics rules are playfully overturned by contextual cooking interactions."
-      },
-      {
-        title: "Spatial Delivery Packing",
-        description:
-          "Constrained grid fitting requiring players to pack irregular pizza slices into geometric delivery boxes under strict spatial rules."
-      }
-    ],
-    designProcess: [
-      "Began every level as an authentic hand-drawn rough level design sketch to establish spatial layout and focal points.",
-      "Categorized puzzles into 5 cognitive pillars: Spatial Reasoning, Sequencing, Visual Misdirection, Physics, and Logic.",
-      "Tuned the progressive difficulty curve so casual foodies and hardcore puzzle solvers found continuous satisfaction.",
-      "Engineered bespoke level fail states that featured witty culinary animations to make losing enjoyable."
-    ],
-    telemetryAndBalancing:
-      "Grouped 180 levels into 12 themed 'menus'. Players who completed Menu 3 showed a 78% completion rate through the rest of the game, proving that the early onboarding established high brand affinity.",
-    keyLearnings: [
-      "Thematic constraints breed creative mechanical variety: confining the universe to pizza forced deep exploration of cutting, heating, stacking, and delivery tropes.",
-      "Whimsical fail-states reduce rage-quits: when failure results in a funny animation, retries become part of the entertainment."
-    ],
-    links: {
-      playStore: "https://play.google.com/store/apps/details?id=com.mindyourlogic.unbox.pizza.brain.teaser.logic.puzzle&hl=en_IN",
-      appStore: "https://apps.apple.com/us/app/pizza-iq-brain-games/id1660575117"
-    },
-    lensBreakdown: {
-      playerExperience:
-        "A constant mix of appetizing culinary art and intellectual surprise that keeps players smiling even when stumped.",
-      gameSystems:
-        "Bespoke slice intersection algorithms and topping coordinate matrices calculating validity upon stroke completion.",
-      designIteration:
-        "Paper sketches directly identified over-cluttered levels; simplified background toppings by 40% to keep puzzle goals crisp."
-    }
+    slug: "pizza-iq", title: "Pizza IQ", category: "Physics & Logic",
+    status: "Published mobile game", role: "Puzzle & Level Design",
+    summary: "Created and implemented 180+ unique puzzle levels for Pizza IQ: Brain Game, combining logical deduction and out-of-the-box thinking within a pizza-centric theme.",
+    contributions: ["Designed and implemented 180+ puzzle levels.", "Structured progressive difficulty to test IQ and spatial reasoning.", "Used limited pizza-themed assets in inventive ways."],
+    coreMechanics: [{ title: "Themed logic puzzles", description: "Solve pizza-themed challenges through logical deduction, spatial reasoning and unexpected solutions." }],
+    designProcess: ["Keep puzzles within the pizza theme.", "Find varied uses for the available assets.", "Structure the content for progressive difficulty."],
+    challenge: "Demand inventive solutions while working with a limited, consistently pizza-themed set of assets.",
+    results: ["180+ unique puzzle levels designed and implemented, as stated in the original portfolio."],
+    media: { ...emptyMedia, cover: image("VAG2azvU0lc-poster.jpg", "Pizza IQ gameplay still", 406, 720), gameplayVideos: [clip("VAG2azvU0lc", "Pizza IQ gameplay")] },
+    links: [
+      { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.mindyourlogic.unbox.pizza.brain.teaser.logic.puzzle&hl=en_IN" },
+      { label: "App Store", href: "https://apps.apple.com/us/app/pizza-iq-brain-games/id1660575117" },
+    ], sourceSections: ["PBt3M8LcVVwcmzQM"],
   },
   {
-    slug: "wobble-bomber",
-    title: "Wobble Bomber",
-    tagline: "5v5 Ragdoll Physics Elimination Game — Tactical Spatial Design & GDD",
-    category: "Original Concepts",
-    role: "Sole Game & Level Designer",
-    studio: "Personal Original IP",
-    timeline: "2024",
-    platforms: ["PC / Console Concept"],
-    metrics: [
-      { label: "Team Format", value: "5v5 Multiplayer" },
-      { label: "Match Structure", value: "Best of 5 Rounds" },
-      { label: "Core Spawns", value: "7 Dynamic Bombs" },
-      { label: "Health System", value: "3-Hit Elimination" }
-    ],
-    galleryImages: [
-      "/images/MAG3jBbZmJY.jpg",
-      "/images/MAG3jDQYblU.jpg",
-      "/images/MAG3jETFoh0.jpg",
-      "/images/MAG3jGirsP0.jpg"
-    ],
-    sketches: [
-      "/images/MAG3jIw_yWA.jpg",
-      "/images/MAG3jLBNgYw.jpg",
-      "/images/MAG3jM5rt-c.jpg",
-      "/images/MAG3jMkrn_8.jpg",
-      "/images/MAG3jO2qfBw.jpg",
-      "/images/MAG6MevHi5U.jpg"
-    ],
-    summary:
-      "Complete original IP featuring a 5v5 ragdoll physics elimination arena. Authored comprehensive Game Design Documents (GDD) and Level Design Documents (LDD). Players position covertly before seven bombs spawn, utilizing 5-second detonation fuses, 'Flail' knockbacks, and stealth bushes in a shrinking Poison Cloud arena.",
-    challenge:
-      "Balancing the chaotic hilarity of unpredictable ragdoll physics with the competitive depth and tactical flanking required for high-stakes 5v5 team play.",
-    playerExperience:
-      "Heart-pounding comedic tension. Grabbing a ticking bomb ignites a frantic 5-second scramble to hurl it at an enemy or perform a sacrifice play, all while managing ragdoll clumsiness and creeping poison gas.",
+    slug: "wobble-bomber", title: "Wobble Bomber", category: "Original Concepts",
+    status: "Original design concept", role: "Game & Level Design Documentation",
+    summary: "A personal 5v5 ragdoll-physics elimination concept. Teams position themselves before seven bombs spawn, then acquire, throw and avoid bombs while using knockback, stealth and teleporters.",
+    contributions: ["Authored game-design and level-design documents for the concept.", "Defined the bomb, health, knockback, stealth and arena systems.", "Documented a symmetrical arena and its player routes."],
     coreMechanics: [
-      {
-        title: "5-Second Detonation Hot Potato",
-        description:
-          "Once grabbed, a bomb triggers a relentless 5-second audio-visual fuse. The carrier must throw it, pass it, or self-detonate amidst enemy clusters."
-      },
-      {
-        title: "Flail Knockback & Environmental Hazards",
-        description:
-          "Ragdoll melee shove mechanic that sends opponents stumbling into blast radiuses, lethal pits, or advancing gas clouds."
-      },
-      {
-        title: "Stealth Bushes & Symmetrical Tactical Flanking",
-        description:
-          "Line-of-sight concealment bushes paired with symmetrical teleporters and blast-resistant walls for coordinated team ambushes."
-      },
-      {
-        title: "Dynamic Poison Cloud Ring",
-        description:
-          "Gradually constricts the combat zone toward a central climax point, preventing stalling and forcing final chaotic showdowns."
-      }
+      { title: "Five-second fuse", description: "Picking up a bomb starts a five-second fuse. Throw it before it self-detonates." },
+      { title: "Flail, stealth & teleporters", description: "Push enemies into blasts, hide in green bushes and use paired teleporters to flank." },
+      { title: "Dynamic arena pressure", description: "Bomb frequency changes with player count. A shrinking Poison Cloud forces final combat." },
+      { title: "Elimination rounds", description: "Manage a three-hit health system across five rounds." },
     ],
-    designProcess: [
-      "Engineered the complete Game Design Document outlining round economy, 3-hit health rules, and player spawn algorithms.",
-      "Drafted comprehensive Level Design Documents featuring architectural cross-sections, cover density, and sightline cones.",
-      "Hand-sketched detailed topological arena maps with teleporter nodes and poison ring timelines.",
-      "Simulated player movement speeds vs bomb fuse durations to calibrate throw trajectory arcs and evade timings."
-    ],
-    telemetryAndBalancing:
-      "Tuned bomb spawn frequency parametrically based on surviving player counts (7 bombs for 10 players down to 2 bombs in 1v1 overtime). This prevents early round stalemates while maintaining climax intensity.",
-    keyLearnings: [
-      "Ragdoll unpredictability requires symmetrical map predictability: competitive players accept physics chaos when the arena layout is undeniably fair.",
-      "Time pressure creates comedy: a ticking 5-second countdown turns even simple button presses into uproarious panic."
-    ],
-    links: {
-      gddDocument: "https://docs.google.com/document/d/18b6GLLlcJfKBhtljKRkm-l9eGvs9jmvvp1byGZw2zyc/edit?usp=sharing",
-      lddDocument: "https://docs.google.com/document/d/1Kuct91PB13DVtfMnNlYT3wPE550TKDFG8sTuviBwUxc/edit?usp=sharing"
-    },
-    lensBreakdown: {
-      playerExperience:
-        "The adrenaline rush of running with live explosives, punctuated by hysterical ragdoll physics knockdowns when plans go catastrophically wrong.",
-      gameSystems:
-        "State synchronization balancing physics tick-rates with server latency, ensuring explosion knockback impulses register identically across all clients.",
-      designIteration:
-        "Playtest sketches revealed players camping behind gray walls; introduced the shrinking Poison Cloud ring to relentlessly flush campers out."
-    }
+    designProcess: ["Define the acquire → prime → throw → push/flail → survive loop in the GDD.", "Document barriers, stealth areas, spawn locations and teleporter routes in the LDD.", "Use the arena diagram and gameplay-flow diagram to explain the proposed design."],
+    challenge: "Balance tactical team play with unpredictable ragdoll movement and increasing arena pressure.",
+    playerExperience: "Coordinated chaos: competitive elimination with slapstick movement, sudden ambushes and risky bomb throws.",
+    media: { ...emptyMedia, designDiagrams: [image("wobble-bomber-document-1.png", "Wobble Bomber arena map extracted from the existing GDD", 665, 646), image("wobble-bomber-document-2.png", "Wobble Bomber gameplay flow extracted from the existing GDD", 1260, 685)] },
+    links: [
+      { label: "Game design document", href: "https://docs.google.com/document/d/18b6GLLlcJfKBhtljKRkm-l9eGvs9jmvvp1byGZw2zyc/edit?usp=sharing" },
+      { label: "Level design document", href: "https://docs.google.com/document/d/1Kuct91PB13DVtfMnNlYT3wPE550TKDFG8sTuviBwUxc/edit?usp=sharing" },
+      { label: "Download GDD (.docx)", href: "/documents/wobble-bomber-game-design.docx" },
+      { label: "Download LDD (.docx)", href: "/documents/wobble-bomber-level-design.docx" },
+    ], sourceSections: ["PBQNk17QqPy6g8CN"],
   },
   {
-    slug: "dreamlink",
-    title: "DreamLink: The Fractured Timeline",
-    tagline: "Two-Player Co-operative Asymmetric Reality Synchronization",
-    category: "Original Concepts",
-    role: "Game & Narrative Systems Designer",
-    studio: "Personal Original IP",
-    timeline: "2024",
-    platforms: ["Co-op PC / Console"],
-    metrics: [
-      { label: "Player Count", value: "2 Players Co-op" },
-      { label: "Dual Dimensions", value: "Reality (R) & Dream (D)" },
-      { label: "Core System", value: "Inter-Dimensional Sync" }
-    ],
-    galleryImages: [
-      "/images/MAG3jDQYblU.jpg",
-      "/images/MAG3jGirsP0.jpg"
-    ],
-    sketches: [
-      "/images/MAG3jLBNgYw.jpg",
-      "/images/MAG3jIw_yWA.jpg"
-    ],
-    summary:
-      "Authored the complete Game Design Document for DreamLink, a two-player co-op puzzle experience where players inhabit the fractured consciousness of one mind divided between logical Reality (R) and surreal Dream (D) realms. Puzzles require real-time inter-dimensional synchronization.",
-    challenge:
-      "Designing asymmetric puzzle mechanics where neither player feels like a passive assistant, ensuring both players possess equal agency and indispensable roles in every stage.",
-    playerExperience:
-      "Deep symbiotic communication. Players cannot see each other's realms directly; they must describe what they observe, verbalizing surreal anomalies and mechanical levers to reconstruct timeline fragments together.",
+    slug: "dreamlink", title: "DreamLink: The Fractured Timeline", category: "Original Concepts",
+    status: "Original design concept", role: "Game & Narrative Design Documentation",
+    summary: "A two-player cooperative puzzle concept in which players inhabit one fractured consciousness: one in logical Reality and the other in rule-bending Dream. Communication and coordinated actions connect their worlds as they try to merge a broken timeline.",
+    contributions: ["Developed the concept and game-design document.", "Documented cross-realm cooperation and narrative progression.", "Outlined levels including The Awakening, The Mark of Echoes and The Cart Ride in the existing GDD."],
     coreMechanics: [
-      {
-        title: "Inter-Dimensional Synchronization",
-        description:
-          "Actions in Reality (R) trigger surreal counterpart manifestations in Dream (D): pulling a standard breaker in R manifests a floating crystalline bridge in D."
-      },
-      {
-        title: "Temporal Echoes & State Transfer",
-        description:
-          "Physical objects passed through rift nodes transform between practical mechanical tools and metaphysical dream artifacts."
-      },
-      {
-        title: "Asymmetric Information Puzzles",
-        description:
-          "Neither screen shows the whole picture; players must verbally communicate environmental clues to solve dual-key locks and spatial barriers."
-      }
+      { title: "Inter-dimensional synchronization", description: "An action in one world affects the other: a Reality switch can create a bridge in Dream." },
+      { title: "Shared information & timing", description: "Players communicate observations and coordinate actions to solve puzzles." },
+      { title: "Narrative discovery", description: "Merging the timeline reveals the failed temporal experiment behind the split consciousness." },
     ],
-    designProcess: [
-      "Wrote the complete 30-page Game Design Document detailing timeline lore, psychic fracture mechanics, and level progression.",
-      "Designed twin-grid spatial puzzles ensuring every interaction required balanced participation from both players.",
-      "Mapped emotional narrative milestones that unlock as players successfully harmonize fragmented memories.",
-      "Developed communication protocols to guide player dialogue naturally without artificial prompt popups."
-    ],
-    telemetryAndBalancing:
-      "Engineered puzzle complexity around verbal communication time: stage difficulty scales not by execution reflex speed, but by the conceptual translation required to describe abstract dream symbols to the logical realm partner.",
-    keyLearnings: [
-      "Asymmetric co-op is built on trust and language: the most satisfying puzzles occur when one player describes a mystery and the other recognizes the solution in their world.",
-      "Dual-reality mechanics require distinct visual grammar: Reality must feel grounded and tactile, while Dream must feel ethereal and fluid."
-    ],
-    links: {
-      gddDocument: "https://docs.google.com/document/d/1Rq5JieXbq9ktkofQcw-qDMG0HO2AKVlGPZ-GtF3ivaw/edit?usp=sharing"
-    },
-    lensBreakdown: {
-      playerExperience:
-        "The intimate thrill of joint epiphany—when two players in completely different worlds communicate a solution that merges their realities.",
-      gameSystems:
-        "Event-broker architecture broadcasting cross-realm state mutations (R_Switch_01_Activated -> D_Bridge_01_Materialize) with deterministic state syncing.",
-      designIteration:
-        "Early drafts had the Reality player doing 70% of the mechanical actions; re-engineered Dream world physics to allow Dream manipulation to alter gravity in Reality."
-    }
-  }
+    designProcess: ["Introduce simultaneous switches and shared door feedback in The Awakening.", "Give one player movable blocks and the other the target arrangement in The Mark of Echoes.", "Extend coordinated input to track switching, jumping and ducking in The Cart Ride."],
+    playerExperience: "Cooperation through communication, shared discoveries and the gradual reconstruction of a fractured identity.",
+    media: { ...emptyMedia },
+    links: [
+      { label: "Game design document", href: "https://docs.google.com/document/d/1Rq5JieXbq9ktkofQcw-qDMG0HO2AKVlGPZ-GtF3ivaw/edit?usp=sharing" },
+      { label: "Download GDD (.docx)", href: "/documents/dreamlink-game-design.docx" },
+    ], sourceSections: ["PBYdmQwgYKXJ3CHC"],
+  },
 ];
-
