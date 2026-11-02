@@ -1,132 +1,163 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useIsPresent, useReducedMotion } from "motion/react";
-import { motionEase, motionTiming } from "@/lib/motion";
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { PROJECTS } from "@/data/projects";
+import { motionEase, motionTiming } from "@/lib/motion";
 import { editorialSans } from "./editorialFonts";
-import { ProjectScene } from "./ProjectScene";
+import { ProjectGallery, WORK_FILTERS, type WorkFilter } from "./ProjectGallery";
 import { InlineCaseStudy } from "./InlineCaseStudy";
 import styles from "./SelectedWork.module.css";
 
-const CATEGORIES = [...new Set(PROJECTS.map((project) => project.category))];
+type GalleryPosition = { filter: WorkFilter; offset: number; slug: string | null };
+type Destination = { kind: "detail"; slug: string } | { kind: "gallery"; position: GalleryPosition; legacy?: boolean };
+
+function readPosition(): GalleryPosition | null {
+  const value = window.history.state?.workGallery;
+  return value && WORK_FILTERS.includes(value.filter) && Number.isFinite(value.offset)
+    && (value.slug === null || PROJECTS.some((project) => project.slug === value.slug))
+    ? value as GalleryPosition : null;
+}
+
+function writeHistory(position: GalleryPosition, hash: string, push = false) {
+  // Preserve Next's existing history fields.
+  const state = { ...window.history.state, workGallery: position };
+  if (push) window.history.pushState(state, "", hash);
+  else window.history.replaceState(state, "", hash);
+}
+
 export function SelectedWork() {
-  const [filter, setFilter] = useState("");
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
-  const [settledSlug, setSettledSlug] = useState<string | null>(null);
+  const [filter, setFilter] = useState<WorkFilter>("All Projects");
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [navigation, setNavigation] = useState(0);
-  const pending = useRef<{ slug: string; caseStudy: boolean } | null>(null);
-  const buttons = useRef(new Map<string, HTMLButtonElement>());
+  const sectionRef = useRef<HTMLElement>(null);
+  const galleryPosition = useRef<GalleryPosition>({ filter: "All Projects", offset: -96, slug: null });
+  const selectedRef = useRef<string | null>(null);
+  const pending = useRef<Destination | null>(null);
+  const lastSynced = useRef("");
   const reducedMotion = useReducedMotion();
-  const visible = PROJECTS.filter((project) => !filter || project.category === filter);
+  const selected = PROJECTS.find((project) => project.slug === selectedSlug);
 
   useEffect(() => {
-    function sync() {
+    function sync(event?: Event) {
+      // A history traversal can dispatch both events for the same location.
+      if (event?.type === "hashchange" && lastSynced.current === window.location.href) return;
+      lastSynced.current = window.location.href;
       const hash = window.location.hash;
-      const project = PROJECTS.find((item) => ["project", "scene", "lab"].some((prefix) => hash === `#${prefix}-${item.slug}`));
-      if (!project) { pending.current = null; setOpenSlug(null); setSettledSlug(null); return; }
-      const caseStudy = hash.startsWith("#project-");
-      if (!caseStudy) setSettledSlug(null);
-      pending.current = { slug: project.slug, caseStudy };
-      setFilter((current) => current && current !== project.category ? "" : current);
-      setOpenSlug(caseStudy ? project.slug : null);
+      const project = PROJECTS.find((item) => ["project", "case", "scene", "lab"].some((prefix) => hash === `#${prefix}-${item.slug}`));
+      const position = readPosition() ?? galleryPosition.current;
+      galleryPosition.current = position;
+      setFilter(position.filter);
+      const wasDetail = selectedRef.current !== null;
+      const detail = project && (hash.startsWith("#project-") || hash.startsWith("#case-"));
+      selectedRef.current = detail ? project.slug : null;
+      setSelectedSlug(selectedRef.current);
+      if (detail) pending.current = { kind: "detail", slug: project.slug };
+      else if (project) {
+        // Legacy scene/lab links now identify the matching gallery item.
+        const legacyPosition = { ...position, filter: "All Projects" as const, slug: project.slug };
+        galleryPosition.current = legacyPosition;
+        setFilter(legacyPosition.filter);
+        pending.current = { kind: "gallery", position: legacyPosition, legacy: true };
+      } else if (wasDetail && (hash === "#work" || !hash)) pending.current = { kind: "gallery", position };
+      else pending.current = null;
       setNavigation((value) => value + 1);
     }
+    function onWorkLink(event: globalThis.MouseEvent) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = event.target instanceof Element ? event.target.closest("a") : null;
+      if (!(anchor instanceof HTMLAnchorElement) || anchor.target === "_blank") return;
+      const url = new URL(anchor.href);
+      if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || url.search !== window.location.search || url.hash !== "#work") return;
+      // Next's same-page links may push history without a native hashchange.
+      // Let the existing link handle scrolling and focus while we show the gallery.
+      pending.current = null;
+      selectedRef.current = null;
+      setSelectedSlug(null);
+    }
     sync();
-    window.addEventListener("hashchange", sync);
+    document.addEventListener("click", onWorkLink, true);
     window.addEventListener("popstate", sync);
-    return () => { window.removeEventListener("hashchange", sync); window.removeEventListener("popstate", sync); };
+    window.addEventListener("hashchange", sync);
+    return () => {
+      document.removeEventListener("click", onWorkLink, true);
+      window.removeEventListener("popstate", sync);
+      window.removeEventListener("hashchange", sync);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!pending.current) return;
-    if (pending.current.caseStudy && reducedMotion === false && settledSlug !== pending.current.slug) return;
-    const frame = requestAnimationFrame(() => {
-      const destination = pending.current;
-      if (!destination) return;
-      pending.current = null;
-      const target = destination.caseStudy ? document.getElementById(`project-${destination.slug}`) : buttons.current.get(destination.slug);
-      target?.focus({ preventScroll: true });
-      const scrollTarget = destination.caseStudy ? target : document.getElementById(`scene-${destination.slug}`);
-      scrollTarget?.scrollIntoView({ block: "start", behavior: reducedMotion !== false ? "instant" : "smooth" });
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [openSlug, filter, reducedMotion, navigation, settledSlug]);
+  useLayoutEffect(() => {
+    const destination = pending.current;
+    if (!destination) return;
+    pending.current = null;
+    if (destination.kind === "detail") {
+      const heading = document.getElementById(`project-${destination.slug}`);
+      heading?.focus({ preventScroll: true });
+      heading?.scrollIntoView({ block: "start", behavior: reducedMotion === false ? "smooth" : "instant" });
+    } else {
+      const card = document.getElementById(`gallery-${destination.position.slug}`);
+      (card ?? document.getElementById("work-heading"))?.focus({ preventScroll: true });
+      if (destination.legacy) card?.scrollIntoView({ block: "center", behavior: reducedMotion === false ? "smooth" : "instant" });
+      else if (sectionRef.current) {
+        const sectionTop = sectionRef.current.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: Math.max(0, sectionTop + destination.position.offset), behavior: "instant" });
+        const bounds = card?.getBoundingClientRect();
+        // A changed breakpoint can move the originating item away from its saved offset.
+        if (bounds && (bounds.bottom < 80 || bounds.top > window.innerHeight)) {
+          card?.scrollIntoView({ block: "center", behavior: "instant" });
+        }
+      }
+    }
+  }, [selectedSlug, navigation, reducedMotion]);
 
-  function toggleCase(slug: string) {
-    const caseStudy = openSlug !== slug;
-    pending.current = { slug, caseStudy };
-    if (!caseStudy) buttons.current.get(slug)?.focus({ preventScroll: true });
-    setSettledSlug(null);
-    setOpenSlug(caseStudy ? slug : null);
-    window.history.pushState(null, "", `#${caseStudy ? "project" : "scene"}-${slug}`);
+  function openProject(event: MouseEvent<HTMLAnchorElement>, slug: string) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const sectionTop = (sectionRef.current?.getBoundingClientRect().top ?? 0) + window.scrollY;
+    const position = { filter, offset: window.scrollY - sectionTop, slug };
+    galleryPosition.current = position;
+    writeHistory(position, "#work");
+    writeHistory(position, `#project-${slug}`, true);
+    pending.current = { kind: "detail", slug };
+    selectedRef.current = slug;
+    setSelectedSlug(slug);
+    setNavigation((value) => value + 1);
+  }
+
+  function backToGallery() {
+    const position = galleryPosition.current;
+    writeHistory(position, "#work", true);
+    pending.current = { kind: "gallery", position };
+    selectedRef.current = null;
+    setSelectedSlug(null);
+    setFilter(position.filter);
+    setNavigation((value) => value + 1);
+  }
+
+  function changeFilter(next: WorkFilter) {
+    setFilter(next);
+    galleryPosition.current = { filter: next, offset: galleryPosition.current.offset, slug: null };
+    writeHistory(galleryPosition.current, "#work");
   }
 
   return (
-    <section id="work" aria-labelledby="work-heading" className={`${styles.section} ${editorialSans.className}`}>
-      <header className={styles.header}>
-        <div><p className={styles.eyebrow}>The work, unframed.</p><h2 id="work-heading">Selected work.</h2></div>
-        <p>Games, systems, and worlds<br />shaped through design.</p>
-      </header>
-      <nav className={styles.navigation} aria-label="Explore selected work">
-        <label>View<select value={filter} onChange={(event) => {
-          pending.current = null; setFilter(event.target.value); setOpenSlug(null);
-          window.history.replaceState(null, "", "#work");
-        }} aria-controls="work-scenes">
-          <option value="">All work</option>{CATEGORIES.map((category) => <option key={category}>{category}</option>)}
-        </select></label>
-        <label>Jump to<select value="" onChange={(event) => {
-          const slug = event.target.value;
-          pending.current = { slug, caseStudy: false };
-          window.history.pushState(null, "", `#scene-${slug}`);
-          setOpenSlug(null);
-          setNavigation((value) => value + 1);
-        }}>
-          <option value="" disabled>Choose a project</option>
-          {visible.map((project) => <option key={project.slug} value={project.slug}>{project.title}</option>)}
-        </select></label>
-        <span className={styles.projectCount}>{String(visible.length).padStart(2, "0")} projects</span>
-      </nav>
-      <p className={styles.srOnly} role="status">{visible.length} projects shown in {filter || "All work"}.</p>
-      <div id="work-scenes">
-        {visible.map((project, index) => <div key={project.slug}>
-          <ProjectScene project={project} index={index} total={visible.length} expanded={openSlug === project.slug}
-            buttonRef={(node) => { if (node) buttons.current.set(project.slug, node); else buttons.current.delete(project.slug); }}
-            onDiscover={() => toggleCase(project.slug)} />
-          <div id={`case-${project.slug}`}>
-            <AnimatePresence initial={false} onExitComplete={() => {
-              // Re-align after a panel above the destination has finished collapsing.
-              if (window.location.hash.startsWith("#scene-")) {
-                const slug = window.location.hash.slice(7);
-                pending.current = { slug, caseStudy: false };
-                setNavigation((value) => value + 1);
-              }
-            }}>
-              {openSlug === project.slug && <CaseTransition key={project.slug} reducedMotion={reducedMotion}
-                onEntered={() => setSettledSlug(project.slug)}>
-                <InlineCaseStudy project={project} onClose={() => toggleCase(project.slug)} />
-              </CaseTransition>}
-            </AnimatePresence>
+    <section ref={sectionRef} id="work" aria-labelledby="work-heading" className={`${styles.section} ${editorialSans.className}`}>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <div>
+            <p className={styles.eyebrow}>02 / Selected Work</p>
+            <h2 id="work-heading" tabIndex={-1}>Selected work.</h2>
           </div>
-        </div>)}
+          <p>An exploration of games, systems, puzzles, and original concepts.</p>
+        </header>
+        <motion.div key={selected?.slug ?? "gallery"} initial={false}
+          animate={reducedMotion === false ? { opacity: [0.75, 1], y: [8, 0] } : { opacity: 1, y: 0 }}
+          transition={{ duration: reducedMotion === false ? motionTiming.content : 0, ease: motionEase.ui }}>
+          {selected
+            ? <InlineCaseStudy key={selected.slug} project={selected} onClose={backToGallery} />
+            : <ProjectGallery filter={filter} onFilter={changeFilter} onOpen={openProject} />}
+        </motion.div>
       </div>
     </section>
   );
-}
-
-function CaseTransition({ children, reducedMotion, onEntered }: {
-  children: React.ReactNode; reducedMotion: boolean | null; onEntered: () => void;
-}) {
-  const present = useIsPresent();
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!present) ref.current?.querySelectorAll("video").forEach((video) => video.pause());
-  }, [present]);
-  return <motion.div ref={ref} className={styles.caseTransition} inert={!present} aria-hidden={!present}
-    initial={reducedMotion !== false ? false : { height: 0, opacity: 0.6 }}
-    animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-    transition={{ duration: reducedMotion !== false ? 0 : motionTiming.expand, ease: motionEase.ui }}
-    onAnimationComplete={() => { if (present) onEntered(); }}>
-    {children}
-  </motion.div>;
 }
