@@ -1,110 +1,126 @@
-import { Gamepad2, BarChart3, Palette, Layers, Table, FileText, CheckCircle } from "lucide-react";
-import { PROFILE } from "@/data/profile";
+"use client";
 
-const TOOL_ICONS: Record<string, typeof Gamepad2> = {
-  Gamepad2,
-  BarChart3,
-  Palette,
-  Layers,
-  Table,
-  FileText
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { PROFILE } from "@/data/profile";
+import { editorialSans } from "./editorialFonts";
+import { SKILL_PRESENTATION } from "./expertisePresentation";
+import styles from "./ExpertiseSection.module.css";
+
+const CATEGORIES = PROFILE.skillCategories.map((category, index) => ({
+  ...category,
+  id: `expertise-category-${index + 1}`,
+  skills: category.skills.map((name, skillIndex) => ({
+    name,
+    category: category.title,
+    id: `expertise-skill-${index + 1}-${skillIndex + 1}`,
+    ...SKILL_PRESENTATION[name],
+  })),
+}));
+const SKILLS = CATEGORIES.flatMap((category) => category.skills);
+const DEFAULT_SKILL = SKILLS.find((skill) => skill.name === "Level Design") ?? SKILLS[0];
+const REVEAL = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" as const },
+  },
 };
 
 export function ExpertiseSection() {
+  const [selectedId, setSelectedId] = useState(DEFAULT_SKILL?.id);
+  const reducedMotion = useReducedMotion();
+
   return (
-    <section id="expertise" className="py-20 md:py-28 border-b border-[#D8D2C2] bg-[#EDE9DD]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#D8D2C2]">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#F36B45] rounded-xs" />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#667169] font-medium">
-                Capabilities & Tooling
-              </span>
-            </div>
-            <h2 className="font-display font-bold text-4xl sm:text-5xl text-[#17231F] tracking-tight uppercase">
-              Skills & Systems Expertise
-            </h2>
-          </div>
-          <p className="text-sm md:text-base text-[#667169] max-w-md font-sans">
-            Technical and creative proficiencies developed across 4+ years of shipping commercial
-            free-to-play mobile games and live-service operations.
+    <section
+      id="expertise"
+      aria-labelledby="expertise-heading"
+      className={`${styles.section} ${editorialSans.className}`}
+    >
+      <motion.div
+        className={styles.container}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ staggerChildren: reducedMotion ? 0 : 0.07 }}
+      >
+        <motion.div className={styles.identifiers} variants={REVEAL} data-expertise-reveal>
+          <p>05 / Expertise</p>
+          <p>Design capabilities &amp; tools</p>
+        </motion.div>
+
+        <motion.header className={styles.intro} variants={REVEAL} data-expertise-reveal>
+          <h2 id="expertise-heading" className={styles.headline}>The craft.</h2>
+          <p className={styles.subtitle}>
+            Different disciplines.<br />{" "}One connected design practice.
           </p>
-        </div>
+        </motion.header>
 
-        {/* 4 Skill Category Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
-          {PROFILE.skillCategories.map((cat, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-xs bg-[#F7F4EC] border border-[#D8D2C2] space-y-4 hover:border-[#17231F] transition-colors"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-[#D8D2C2]">
-                <span className="font-mono text-xs font-bold text-[#F36B45]">
-                  0{idx + 1}
-                </span>
-                <span className="font-mono text-[10px] text-[#667169] uppercase tracking-wider">
-                  Domain
-                </span>
-              </div>
-
-              <h3 className="font-display font-bold text-xl text-[#17231F]">
-                {cat.title}
-              </h3>
-
-              <ul className="space-y-2 pt-1">
-                {cat.skills.map((skill, sIdx) => (
-                  <li key={sIdx} className="flex items-center gap-2 text-xs font-mono text-[#17231F]/90">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#17231F]/40" />
-                    <span>{skill}</span>
+        <motion.div className={styles.wall} variants={REVEAL} data-expertise-reveal>
+          {CATEGORIES.map((category) => (
+            <div key={category.id} className={styles.discipline}>
+              <h3 id={category.id} className={styles.categoryHeading}>{category.title}</h3>
+              <ul className={styles.terms} aria-labelledby={category.id}>
+                {category.skills.map((skill) => (
+                  <li key={skill.id}>
+                    <button
+                      type="button"
+                      className={styles.skill}
+                      data-emphasis={skill.emphasis ?? "support"}
+                      aria-pressed={selectedId === skill.id}
+                      aria-controls={`${skill.id}-focus`}
+                      onClick={() => setSelectedId(skill.id)}
+                    >
+                      {skill.name}
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-        </div>
+          <p className={styles.hint}>Select a discipline to explore its role in the practice.</p>
+        </motion.div>
 
-        {/* Tools & Workflow Stack */}
-        <div className="mt-12 p-8 rounded-xs bg-[#17231F] text-[#F7F4EC] border border-[#2F453E]">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#2F453E]">
-            <div className="space-y-1">
-              <span className="font-mono text-xs uppercase tracking-widest text-[#C8F17A] font-semibold">
-                Daily Software Stack
-              </span>
-              <h3 className="font-display font-bold text-2xl text-[#F7F4EC]">
-                Production & Telemetry Tools
-              </h3>
-            </div>
-            <span className="font-mono text-xs text-[#8E9B92]">
-              Engine • Telemetry • 2D • Documentation
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 pt-6">
-            {PROFILE.tools.map((tool, tIdx) => {
-              const IconComponent = TOOL_ICONS[tool.iconName] || Gamepad2;
-              return (
-                <div
-                  key={tIdx}
-                  className="p-4 rounded-xs bg-[#1E2E29] border border-[#2F453E] hover:border-[#C8F17A] transition-colors flex flex-col items-center text-center space-y-2"
-                >
-                  <IconComponent className="w-6 h-6 text-[#C8F17A]" />
-                  <div className="font-display font-bold text-sm text-[#F7F4EC]">
-                    {tool.name}
-                  </div>
-                  <div className="font-mono text-[10px] text-[#8E9B92]">
-                    {tool.category}
-                  </div>
+        <motion.div className={styles.focus} variants={REVEAL} data-expertise-reveal>
+          <p className={styles.focusLabel}>In focus</p>
+          <div className={styles.focusContent} role="region" aria-label="Selected discipline" aria-live="polite" aria-atomic="true">
+            {SKILLS.map((skill) => (
+              <div
+                key={skill.id}
+                id={`${skill.id}-focus`}
+                className={styles.focusEntry}
+                data-selected={selectedId === skill.id}
+                aria-hidden={selectedId !== skill.id}
+                inert={selectedId !== skill.id}
+              >
+                <div className={styles.focusIdentity}>
+                  <p className={styles.focusCategory}>{skill.category}</p>
+                  <h3 className={styles.focusTitle}>{skill.name}</h3>
                 </div>
-              );
-            })}
+                <p className={styles.focusDescription}>
+                  {skill.description ?? `Exploring ${skill.name.toLowerCase()} as part of a connected game design practice.`}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
-      </div>
+        <motion.div className={styles.toolkit} variants={REVEAL} data-expertise-reveal>
+          <div className={styles.toolkitIntro}>
+            <h3 className={styles.toolkitHeading}>Production toolkit</h3>
+            <p>Tools used across design, production, analytics, and documentation.</p>
+          </div>
+          <dl className={styles.toolIndex}>
+            {PROFILE.tools.map((tool) => (
+              <div key={tool.name} className={styles.tool}>
+                <dt>{tool.name}</dt>
+                <dd>{tool.category}</dd>
+              </div>
+            ))}
+          </dl>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
-
