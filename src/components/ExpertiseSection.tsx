@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { PROFILE } from "@/data/profile";
 import { editorialSans } from "./editorialFonts";
 import { SKILL_PRESENTATION } from "./expertisePresentation";
@@ -19,18 +20,10 @@ const CATEGORIES = PROFILE.skillCategories.map((category, index) => ({
 }));
 const SKILLS = CATEGORIES.flatMap((category) => category.skills);
 const DEFAULT_SKILL = SKILLS.find((skill) => skill.name === "Level Design") ?? SKILLS[0];
-const REVEAL = {
-  hidden: { opacity: 0, y: 12 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  },
-};
-
 export function ExpertiseSection() {
   const [selectedId, setSelectedId] = useState(DEFAULT_SKILL?.id);
   const reducedMotion = useReducedMotion();
+  const entrance = sectionEntrance(reducedMotion);
 
   return (
     <section
@@ -38,26 +31,20 @@ export function ExpertiseSection() {
       aria-labelledby="expertise-heading"
       className={`${styles.section} ${editorialSans.className}`}
     >
-      <motion.div
-        className={styles.container}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ staggerChildren: reducedMotion ? 0 : 0.07 }}
-      >
-        <motion.div className={styles.identifiers} variants={REVEAL} data-expertise-reveal>
+      <div className={styles.container}>
+        <motion.div className={styles.identifiers} {...entrance} data-expertise-reveal>
           <p>05 / Expertise</p>
           <p>Design capabilities &amp; tools</p>
         </motion.div>
 
-        <motion.header className={styles.intro} variants={REVEAL} data-expertise-reveal>
+        <motion.header className={styles.intro} {...entrance} data-expertise-reveal>
           <h2 id="expertise-heading" className={styles.headline}>The craft.</h2>
           <p className={styles.subtitle}>
             Different disciplines.<br />{" "}One connected design practice.
           </p>
         </motion.header>
 
-        <motion.div className={styles.wall} variants={REVEAL} data-expertise-reveal>
+        <motion.div className={styles.wall} {...entrance} data-expertise-reveal>
           {CATEGORIES.map((category) => (
             <div key={category.id} className={styles.discipline}>
               <h3 id={category.id} className={styles.categoryHeading}>{category.title}</h3>
@@ -82,7 +69,7 @@ export function ExpertiseSection() {
           <p className={styles.hint}>Select a discipline to explore its role in the practice.</p>
         </motion.div>
 
-        <motion.div className={styles.focus} variants={REVEAL} data-expertise-reveal>
+        <motion.div className={styles.focus} {...entrance} data-expertise-reveal>
           <p className={styles.focusLabel}>In focus</p>
           <div className={styles.focusContent} role="region" aria-label="Selected discipline" aria-live="polite" aria-atomic="true">
             {SKILLS.map((skill) => (
@@ -106,7 +93,7 @@ export function ExpertiseSection() {
           </div>
         </motion.div>
 
-        <motion.div className={styles.toolkit} variants={REVEAL} data-expertise-reveal>
+        <motion.div className={styles.toolkit} {...entrance} data-expertise-reveal>
           <div className={styles.toolkitIntro}>
             <h3 className={styles.toolkitHeading}>Production toolkit</h3>
             <p>Tools used across design, production, analytics, and documentation.</p>
@@ -120,7 +107,7 @@ export function ExpertiseSection() {
             ))}
           </dl>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

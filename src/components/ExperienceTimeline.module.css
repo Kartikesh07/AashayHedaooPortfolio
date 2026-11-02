@@ -8,7 +8,7 @@
   background: var(--credits-midnight);
   color: var(--credits-white);
   color-scheme: dark;
-  scroll-margin-top: 80px;
+  scroll-margin-top: 96px;
 }
 
 .section *, .section *::before, .section *::after { box-sizing: border-box; }
@@ -142,7 +142,7 @@
   background: var(--credits-accent);
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform .3s ease;
+  transition: transform var(--motion-expand) var(--ease-ui);
 }
 .creditHeader {
   display: grid;
@@ -172,7 +172,7 @@
   cursor: pointer;
   touch-action: manipulation;
   scroll-margin-block: 100px;
-  transition: color .2s ease;
+  transition: color var(--motion-response) var(--ease-ui);
 }
 .studioButton > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .studioButton:focus-visible { outline: 2px solid var(--credits-accent); outline-offset: 7px; }
@@ -183,7 +183,7 @@
   font-size: 24px;
   font-weight: 400;
   color: var(--credits-accent);
-  transition: transform .25s ease;
+  transition: transform var(--motion-response) var(--ease-ui);
 }
 .role { margin: 12px 0 0; color: var(--credits-accent); font-size: 14px; line-height: 1.6; }
 .creditMetadata { padding-top: 5px; text-align: right; }
@@ -203,7 +203,7 @@
   grid-template-rows: 0fr;
   opacity: 0;
   visibility: hidden;
-  transition: grid-template-rows .3s ease, opacity .2s ease, visibility 0s .3s;
+  transition: grid-template-rows var(--motion-expand) var(--ease-ui), opacity var(--motion-response) var(--ease-ui), visibility 0s var(--motion-expand);
 }
 .revealClip { min-height: 0; overflow: hidden; }
 .productionNotes {
@@ -226,7 +226,7 @@
   grid-template-rows: 1fr;
   opacity: 1;
   visibility: visible;
-  transition: grid-template-rows .3s ease, opacity .25s .06s ease, visibility 0s;
+  transition: grid-template-rows var(--motion-expand) var(--ease-ui), opacity var(--motion-response) .06s var(--ease-ui), visibility 0s;
 }
 .credit[data-expanded="true"] .studioButton { color: var(--credits-accent); }
 .credit[data-expanded="true"] .indicator { transform: rotate(90deg); }

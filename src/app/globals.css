@@ -23,6 +23,15 @@
 
 @layer base {
   :root {
+    --motion-feedback: 160ms;
+    --motion-response: 200ms;
+    --motion-content: 280ms;
+    --motion-expand: 360ms;
+    --motion-entrance: 550ms;
+    --motion-scene: 700ms;
+    --ease-ui: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-feedback: cubic-bezier(0.25, 0.8, 0.25, 1);
     --bg-page: #F7F4EC;
     --text-main: #17231F;
     --text-muted: #667169;
@@ -31,6 +40,7 @@
 
   html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
     background-color: var(--bg-page);
     color: var(--text-main);
     font-family: var(--font-sans);
@@ -42,8 +52,6 @@
   body {
     min-height: 100vh;
     overflow-x: hidden;
-    selection-background-color: #C8F17A;
-    selection-color: #17231F;
   }
 
   ::selection {
@@ -111,14 +119,16 @@
 }
 
 /* Focus styles */
-a:focus-visible, button:focus-visible, input:focus-visible {
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
   outline: 2px solid #F36B45;
   outline-offset: 2px;
 }
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -126,3 +136,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   }
 }
 
+
+:where(button, a, select, summary) { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+:where(button, select, summary):not(:disabled):active { opacity: .8; }
+:where(section, footer)[id] { scroll-margin-top: 96px; }
+@media (forced-colors: active) {
+  :where(a, button, select, summary, [tabindex]):focus-visible { outline: 2px solid Highlight !important; }
+  [aria-pressed="true"], a[aria-current="location"] { outline: 1px solid Highlight; outline-offset: 3px; }
+}

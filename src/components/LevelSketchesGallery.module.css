@@ -8,7 +8,7 @@
   background: var(--archive-paper);
   color: var(--archive-ink);
   color-scheme: light;
-  scroll-margin-top: 80px;
+  scroll-margin-top: 96px;
 }
 .section *, .section *::before, .section *::after { box-sizing: border-box; }
 .section ::selection { background: var(--archive-blue); color: var(--archive-white); }
@@ -21,13 +21,13 @@
 .categories { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: clamp(32px, 4vw, 56px); border-bottom: 1px solid var(--archive-rule); }
 .categories button { display: flex; align-items: baseline; gap: 12px; position: relative; min-height: 48px; padding: 12px 0; border: 0; background: transparent; color: var(--archive-slate); font: inherit; font-size: 14px; cursor: pointer; }
 .categories button span { font-size: 10px; font-variant-numeric: tabular-nums; }
-.categories button::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--archive-blue); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
+.categories button::after { content: ""; position: absolute; inset: auto 0 -1px; height: 2px; background: var(--archive-blue); transform: scaleX(0); transform-origin: left; transition: transform var(--motion-response) var(--ease-ui); }
 .categories button[aria-pressed="true"] { color: var(--archive-ink); }
 .categories button[aria-pressed="true"]::after { transform: scaleX(1); }
 .viewer { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 32px; padding-top: 28px; }
 .imageStage { position: relative; height: clamp(300px, 40vw, 540px); background: var(--archive-white); }
 .originalImage { object-fit: contain; }
-.imageEntrance { animation: image-enter .25s ease both; }
+.imageEntrance[data-loaded="true"] { animation: image-enter var(--motion-content) var(--ease-ui) both; }
 @keyframes image-enter { from { opacity: .4; } to { opacity: 1; } }
 .caption { display: flex; flex-direction: column; min-width: 0; }
 .captionText { display: grid; }
@@ -38,7 +38,7 @@
 .caption h3 { margin: 0; font-size: 26px; font-weight: 500; line-height: 1.2; letter-spacing: -.035em; text-wrap: balance; }
 .note { margin: 16px 0 28px; color: var(--archive-slate); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
 .inspect { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 48px; margin-top: auto; padding: 12px 0; border: 0; border-bottom: 1px solid var(--archive-blue); background: transparent; color: var(--archive-ink); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
-.inspect span { color: var(--archive-blue); transition: transform .2s ease; }
+.inspect span { color: var(--archive-blue); transition: transform var(--motion-response) var(--ease-ui); }
 .navigation { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .caption .navigation { margin-top: 16px; }
 .textControl { min-width: 44px; min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: inherit; font: inherit; font-size: 13px; cursor: pointer; }
@@ -55,7 +55,7 @@
 .documentName > span { display: block; margin-top: 6px; color: var(--archive-slate); font-size: 12px; font-weight: 400; letter-spacing: 0; }
 .documentType { color: var(--archive-slate); font-size: 10px; letter-spacing: .04em; }
 .download { text-align: right; font-size: 12px; }
-.download > span { display: inline-block; margin-left: 12px; color: var(--archive-blue); transition: transform .2s ease; }
+.download > span { display: inline-block; margin-left: 12px; color: var(--archive-blue); transition: transform var(--motion-response) var(--ease-ui); }
 .section button { touch-action: manipulation; }
 .section :is(button, a):focus-visible, .viewer:focus-visible { outline: 2px solid var(--archive-blue); outline-offset: 5px; }
 @media (hover: hover) {
@@ -106,4 +106,17 @@
 @media (prefers-reduced-motion: reduce) {
   .section [data-archive-reveal] { opacity: 1 !important; transform: none !important; }
   .section *, .section *::before, .section *::after { transition: none !important; animation: none !important; }
+}
+
+.dialog[open] { animation: inspection-enter var(--motion-content) var(--ease-editorial); }
+.dialog::backdrop { animation: image-enter var(--motion-content) var(--ease-ui); }
+.dialog :is(button, a):focus-visible { outline: 2px solid var(--archive-blue); outline-offset: 5px; }
+.categories button, .thumbnail, .textControl, .documentName { transition: color var(--motion-feedback) var(--ease-feedback), opacity var(--motion-feedback) var(--ease-feedback); }
+.captionEntry[data-active="true"] { animation: image-enter var(--motion-content) var(--ease-ui); }
+.inspect:focus-visible span { transform: translate(2px, -2px); }
+.document:focus-visible .download > span { transform: translateY(3px); }
+@keyframes inspection-enter { from { opacity: .65; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (hover: hover) { .thumbnail:hover:not([aria-pressed="true"]) { opacity: .75; } }
+@media (prefers-reduced-motion: reduce) {
+  .dialog, .dialog::backdrop, .dialog * { animation: none !important; transition: none !important; }
 }

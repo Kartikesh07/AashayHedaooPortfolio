@@ -42,8 +42,10 @@ export function KineticHeadline() {
         !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
+    const entering = targetRadius.get() === 0;
     pointerX.set(Math.max(0, Math.min(bounds.width, event.clientX - bounds.left)));
     pointerY.set(Math.max(0, Math.min(bounds.height, event.clientY - bounds.top)));
+    if (entering) { x.jump(pointerX.get()); y.jump(pointerY.get()); }
     targetRadius.set(Math.min(88, bounds.width * 0.12));
   }
 

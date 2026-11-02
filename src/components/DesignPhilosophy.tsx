@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { editorialSans } from "./editorialFonts";
 import styles from "./DesignPhilosophy.module.css";
 
@@ -44,25 +45,21 @@ const PRINCIPLES = [
 export function DesignPhilosophy() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
-  const entrance = {
-    initial: { opacity: 0, y: reducedMotion ? 0 : 14 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.15 },
-  };
+  const entrance = sectionEntrance(reducedMotion);
 
   return (
     <section id="process" aria-labelledby="philosophy-heading" className={`${styles.section} ${editorialSans.className}`}>
       <div className={styles.container}>
-        <motion.header {...entrance} data-philosophy-reveal transition={{ duration: reducedMotion ? 0 : 0.55 }} className={styles.intro}>
+        <motion.header {...entrance} data-philosophy-reveal className={styles.intro}>
           <p className={styles.identifier}>03 / Design Philosophy</p>
           <p className={styles.kicker}>The thinking behind play</p>
           <h2 id="philosophy-heading" className={styles.headline}>
             <span>Good games don&apos;t</span>{" "}
             <span>happen by accident.</span>
           </h2>
-          <motion.p {...entrance} data-philosophy-reveal transition={{ duration: reducedMotion ? 0 : 0.45, delay: reducedMotion ? 0 : 0.12 }} className={styles.description}>
+          <p className={styles.description}>
             Every engaging experience begins with an intentional design decision.
-          </motion.p>
+          </p>
         </motion.header>
 
         <div className={styles.principles}>
@@ -73,7 +70,6 @@ export function DesignPhilosophy() {
 
             return (
               <motion.article key={principle.id} {...entrance} data-philosophy-reveal
-                transition={{ duration: reducedMotion ? 0 : 0.45, delay: reducedMotion ? 0 : index * 0.04 }}
                 className={styles.principle} data-expanded={expanded}>
                 <span className={styles.number} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                 <div className={styles.principleBody}>
@@ -106,7 +102,7 @@ export function DesignPhilosophy() {
       </div>
 
       <div className={styles.closing}>
-        <motion.div {...entrance} data-philosophy-reveal transition={{ duration: reducedMotion ? 0 : 0.6 }} className={styles.closingInner}>
+        <motion.div {...entrance} data-philosophy-reveal className={styles.closingInner}>
           <p className={styles.closingLabel}>The thinking behind play</p>
           <p className={styles.closingStatement}>
             <span>Design the feeling.</span>{" "}

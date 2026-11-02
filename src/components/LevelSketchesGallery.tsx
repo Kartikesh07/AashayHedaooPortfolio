@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { SKETCHES, type SketchItem } from "@/data/sketches";
 import { editorialSans } from "./editorialFonts";
 import styles from "./LevelSketchesGallery.module.css";
@@ -35,11 +36,13 @@ function SketchInspection({ sketch, counter, onPrevious, onNext, onClose }: Insp
     const previousOverflow = document.documentElement.style.overflow;
     const previousBodyOverflow = document.body.style.overflow;
     // Native modal dialogs provide focus containment and make the background inert.
-    dialogRef.current?.showModal();
+    const dialog = dialogRef.current;
+    dialog?.showModal();
     closeRef.current?.focus();
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     return () => {
+      dialog?.close();
       document.documentElement.style.overflow = previousOverflow;
       document.body.style.overflow = previousBodyOverflow;
       if (opener instanceof HTMLElement) opener.focus({ preventScroll: true });
@@ -71,7 +74,8 @@ function SketchInspection({ sketch, counter, onPrevious, onNext, onClose }: Insp
         <button ref={closeRef} type="button" onClick={onClose} className={styles.textControl}>Close <span aria-hidden="true">×</span></button>
       </header>
       <div className={styles.dialogImage}>
-        <Image key={sketch.id} src={sketch.image} alt={sketch.title} fill sizes="100vw" className={styles.originalImage} />
+        <Image key={sketch.id} src={sketch.image} alt={sketch.title} fill sizes="100vw" onLoad={(event) => { event.currentTarget.dataset.loaded = "true"; }}
+          className={`${styles.originalImage} ${styles.imageEntrance}`} loading="eager" />
       </div>
       <div className={styles.dialogFooter}>
         <p id="sketch-inspection-note">{sketch.note}</p>
@@ -119,12 +123,7 @@ export function LevelSketchesGallery() {
     }
   }
 
-  const entrance = {
-    initial: false as const,
-    whileInView: reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.7, 1], y: [10, 0] },
-    viewport: { once: true, amount: 0.1 },
-    transition: { duration: reducedMotion ? 0 : 0.4 },
-  };
+  const entrance = sectionEntrance(reducedMotion);
 
   return (
     <section id="sketches" aria-labelledby="sketchbook-heading" className={`${styles.section} ${editorialSans.className}`}>
@@ -148,7 +147,8 @@ export function LevelSketchesGallery() {
           <div id="sketchbook-viewer" className={styles.viewer} role="region" aria-label="Sketch viewer; use left and right arrow keys to navigate" tabIndex={0} onKeyDown={handleViewerKeys}>
             <div className={styles.imageStage}>
               <Image key={sketch.id} src={sketch.image} alt={sketch.title} fill
-                sizes="(max-width: 800px) 90vw, 70vw" className={`${styles.originalImage} ${styles.imageEntrance}`} />
+                sizes="(max-width: 800px) 90vw, 70vw"
+                onLoad={(event) => { event.currentTarget.dataset.loaded = "true"; }} className={`${styles.originalImage} ${styles.imageEntrance}`} />
             </div>
             <div className={styles.caption}>
               <div className={styles.captionText} aria-live="polite" aria-atomic="true">

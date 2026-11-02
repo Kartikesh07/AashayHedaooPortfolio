@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { PROFILE } from "@/data/profile";
 import { editorialSans } from "./editorialFonts";
 import styles from "./ContactFooter.module.css";
@@ -30,9 +31,7 @@ export function ContactFooter() {
   return (
     <footer id="contact" aria-labelledby="contact-heading" className={`${styles.footer} ${editorialSans.className}`}>
       <div className={styles.container}>
-        <motion.div initial={false}
-          whileInView={reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.7, 1], y: [12, 0] }}
-          viewport={{ once: true, amount: 0.15 }} transition={{ duration: reducedMotion ? 0 : 0.45 }}
+        <motion.div {...sectionEntrance(reducedMotion, 16)}
           data-contact-reveal>
           <p className={styles.identifier}>08 / Contact</p>
           <h2 id="contact-heading" className={styles.headline}>

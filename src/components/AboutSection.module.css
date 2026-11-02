@@ -7,7 +7,7 @@
   background: var(--about-peach);
   color: var(--about-ink);
   color-scheme: light;
-  scroll-margin-top: 80px;
+  scroll-margin-top: 96px;
 }
 
 .section *,
@@ -108,7 +108,7 @@
   cursor: pointer;
   touch-action: manipulation;
   scroll-margin-block: 100px;
-  transition: color .18s ease;
+  transition: color var(--motion-feedback) var(--ease-ui);
 }
 
 .annotation::after {
@@ -118,7 +118,7 @@
   height: 1px;
   background: var(--about-cobalt);
   transform-origin: left;
-  transition: transform .18s ease;
+  transition: transform var(--motion-feedback) var(--ease-ui);
 }
 
 .annotation sup {
@@ -180,14 +180,14 @@
   visibility: hidden;
   opacity: 0;
   transform: translateY(5px);
-  transition: opacity .16s ease, transform .2s ease, visibility 0s .2s;
+  transition: none;
 }
 
 .note[data-active="true"] {
   visibility: visible;
   opacity: 1;
   transform: translateY(0);
-  transition: opacity .22s .08s ease, transform .22s .08s ease, visibility 0s;
+  animation: content-enter var(--motion-content) var(--ease-ui);
 }
 
 .reference {
@@ -312,10 +312,12 @@
   }
 
   .section *, .section *::before, .section *::after {
-    transition: none !important;
+    transition: none !important; animation: none !important;
   }
 
   .note {
     transform: none;
   }
 }
+
+@keyframes content-enter { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }

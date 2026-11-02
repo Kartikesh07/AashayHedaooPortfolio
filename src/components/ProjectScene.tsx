@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import type { Project, ProjectImage } from "@/data/projects";
 import { SCENE_DIRECTIONS } from "./projectScenes.config";
+import { motionEase, motionTiming } from "@/lib/motion";
 import styles from "./SelectedWork.module.css";
 
 function Artwork({ image, secondary = false }: { image: ProjectImage; secondary?: boolean }) {
@@ -18,21 +19,23 @@ export function ProjectScene({ project, index, total, expanded, buttonRef, onDis
   buttonRef: RefCallback<HTMLButtonElement>; onDiscover: () => void;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const revealed = useRef(false);
   const reducedMotion = useReducedMotion();
   const direction = SCENE_DIRECTIONS[project.slug] ?? {
     treatment: "detective", title: [project.title], statement: project.summary, accent: "#b5b7ff", surface: "#181a30",
   };
   useEffect(() => {
     const element = ref.current;
-    if (!element || reducedMotion || !window.IntersectionObserver) return;
+    if (revealed.current || !element || reducedMotion !== false || !window.IntersectionObserver || !element.animate) return;
     const animations: Animation[] = [];
     // Visible at rest and without JS; animate only once, as each scene enters.
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
+      revealed.current = true;
       element.querySelectorAll<HTMLElement>("[data-reveal]").forEach((node, order) => {
         const media = node.tagName === "FIGURE";
         animations.push(node.animate([{ transform: media ? "translateY(14px) scale(.985)" : `translateY(${order ? 14 : 26}px)`, opacity: 0.65 }, { transform: "translateY(0) scale(1)", opacity: 1 }],
-          { duration: order ? 650 : 900, delay: order * 60, easing: "cubic-bezier(.2,.7,.2,1)" }));
+          { duration: (order ? motionTiming.entrance : motionTiming.scene) * 1000, delay: Math.min(order, 2) * 40, easing: `cubic-bezier(${motionEase.editorial.join(",")})` }));
       });
       observer.disconnect();
     }, { threshold: 0.12 });

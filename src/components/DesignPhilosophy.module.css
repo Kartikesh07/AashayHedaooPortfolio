@@ -7,7 +7,7 @@
   background: var(--paper);
   color: var(--ink);
   color-scheme: light;
-  scroll-margin-top: 80px;
+  scroll-margin-top: 96px;
 }
 
 .section *, .section *::before, .section *::after { box-sizing: border-box; }
@@ -68,7 +68,7 @@
   background: var(--cobalt);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform .3s ease;
+  transition: transform var(--motion-expand) var(--ease-ui);
 }
 .number {
   padding-top: 3px;
@@ -76,7 +76,7 @@
   font-size: 13px;
   font-variant-numeric: tabular-nums;
   line-height: 1.6;
-  transition: color .2s ease;
+  transition: color var(--motion-response) var(--ease-ui);
 }
 .principleBody { min-width: 0; }
 .principleHeading { margin: 0; }
@@ -105,7 +105,7 @@
   line-height: 1.16;
   letter-spacing: -.045em;
   text-wrap: balance;
-  transition: color .2s ease;
+  transition: color var(--motion-response) var(--ease-ui);
 }
 .indicator {
   grid-column: 2;
@@ -115,7 +115,7 @@
   width: 48px;
   height: 48px;
   color: var(--muted);
-  transition: transform .25s ease, color .2s ease;
+  transition: transform var(--motion-response) var(--ease-ui), color var(--motion-response) var(--ease-ui);
 }
 .indicator::before, .indicator::after {
   content: "";
@@ -139,7 +139,7 @@
   grid-template-rows: 0fr;
   visibility: hidden;
   opacity: 0;
-  transition: grid-template-rows .3s ease, opacity .2s ease, visibility 0s .3s;
+  transition: grid-template-rows var(--motion-expand) var(--ease-ui), opacity var(--motion-response) var(--ease-ui), visibility 0s var(--motion-expand);
 }
 .revealClip { overflow: hidden; min-height: 0; }
 .details {
@@ -156,7 +156,7 @@
   grid-template-rows: 1fr;
   visibility: visible;
   opacity: 1;
-  transition: grid-template-rows .3s ease, opacity .25s .06s ease, visibility 0s;
+  transition: grid-template-rows var(--motion-expand) var(--ease-ui), opacity var(--motion-response) .06s var(--ease-ui), visibility 0s;
 }
 .principle[data-expanded="true"]::before, .principle:focus-within::before { transform: scaleX(1); }
 .principle[data-expanded="true"] .statement,

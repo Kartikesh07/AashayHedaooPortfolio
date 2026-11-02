@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { PROFILE } from "@/data/profile";
 import styles from "./ExperienceTimeline.module.css";
 import { editorialSans } from "./editorialFonts";
@@ -39,12 +40,7 @@ export function ExperienceTimeline() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
   // Content is visible in the server output; viewport animation adds a brief reveal.
-  const entrance = {
-    initial: false as const,
-    whileInView: reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.65, 1], y: [10, 0] },
-    viewport: { once: true, amount: 0.15 },
-    transition: { duration: reducedMotion ? 0 : 0.45, ease: "easeOut" as const },
-  };
+  const entrance = sectionEntrance(reducedMotion);
 
   return (
     <section
@@ -72,15 +68,11 @@ export function ExperienceTimeline() {
           <dl className={styles.figures} aria-label="Selected portfolio achievements">
             {FEATURED.map((achievement) => (
               <motion.div key={achievement.label} {...entrance} className={styles.figure} data-credits-reveal>
-                <motion.dt
-                  initial={false}
-                  whileInView={reducedMotion ? { opacity: 1 } : { opacity: [0.65, 1] }}
-                  viewport={{ once: true }}
-                  transition={{ duration: reducedMotion ? 0 : 0.35, delay: reducedMotion ? 0 : 0.08 }}
+                <dt
                   className={styles.figureLabel}
                 >
                   {achievement.displayLabel}
-                </motion.dt>
+                </dt>
                 <dd className={styles.figureValue}>{achievement.stat}</dd>
                 <dd className={styles.figureContext}>{achievement.description}</dd>
               </motion.div>

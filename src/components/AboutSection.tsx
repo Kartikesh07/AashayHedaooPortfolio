@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { sectionEntrance } from "@/lib/motion";
 import { editorialSans } from "./editorialFonts";
 import styles from "./AboutSection.module.css";
 
@@ -35,18 +36,10 @@ const NOTES = [
 
 type NoteId = (typeof NOTES)[number]["id"];
 
-const REVEAL = {
-  hidden: { opacity: 0, y: 12 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" as const },
-  },
-};
-
 export function AboutSection() {
   const [activeNote, setActiveNote] = useState<NoteId>("psychology");
   const reducedMotion = useReducedMotion();
+  const entrance = sectionEntrance(reducedMotion);
 
   return (
     <section
@@ -54,22 +47,16 @@ export function AboutSection() {
       aria-labelledby="about-heading"
       className={`${styles.section} ${editorialSans.className}`}
     >
-      <motion.div
-        className={styles.composition}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-        transition={{ staggerChildren: reducedMotion ? 0 : 0.06 }}
-      >
+      <div className={styles.composition}>
         <motion.p
           className={styles.identifier}
-          variants={REVEAL}
+          {...entrance}
           data-about-reveal
         >
           04 / About
         </motion.p>
 
-        <motion.header variants={REVEAL} data-about-reveal>
+        <motion.header {...entrance} data-about-reveal>
           <h2 id="about-heading" className={styles.headline}>
             <span>Off the clock.</span>{" "}
             <span>Still curious.</span>
@@ -81,7 +68,7 @@ export function AboutSection() {
 
         <motion.div
           className={styles.editorial}
-          variants={REVEAL}
+          {...entrance}
           data-about-reveal
         >
           <p className={styles.introduction}>
@@ -146,12 +133,12 @@ export function AboutSection() {
 
         <motion.p
           className={styles.signature}
-          variants={REVEAL}
+          {...entrance}
           data-about-reveal
         >
           Curiosity doesn&apos;t clock out.
         </motion.p>
-      </motion.div>
+      </div>
     </section>
   );
 }

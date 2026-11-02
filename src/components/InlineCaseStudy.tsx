@@ -19,7 +19,7 @@ export function InlineCaseStudy({ project, onClose }: { project: Project; onClos
   const hasMedia = media.gameplayVideos.length > 0 || collections.some((item) => item.images.length > 0);
 
   return (
-    <section id={`case-${project.slug}`} className={styles.caseStudy} aria-labelledby={`project-${project.slug}`}
+    <section className={styles.caseStudy} aria-labelledby={`project-${project.slug}`}
       onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}>
       <header className={styles.caseHeader}>
         <div><p className={styles.caseStatus}>Inside the project · {project.status}</p>
@@ -86,11 +86,11 @@ function GameplayPlayer({ video }: { video: GameplayVideo }) {
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const observer = new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) element.pause(); });
+    const observer = window.IntersectionObserver ? new IntersectionObserver(([entry]) => { if (!entry.isIntersecting) element.pause(); }) : null;
     const hide = () => { if (document.hidden) element.pause(); };
-    observer.observe(element);
+    observer?.observe(element);
     document.addEventListener("visibilitychange", hide);
-    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", hide); element.pause(); element.removeAttribute("src"); element.load(); };
+    return () => { observer?.disconnect(); document.removeEventListener("visibilitychange", hide); element.pause(); element.removeAttribute("src"); element.load(); };
   }, []);
   return <figure className={styles.gameplayFigure}>
     <video ref={ref} src={video.src} poster={video.poster} width={video.width} height={video.height}

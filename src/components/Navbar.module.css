@@ -20,14 +20,14 @@
 .brand span { color: #bbc0ff; }
 .links, .primaryLinks { display: flex; align-items: center; gap: clamp(24px, 3vw, 44px); }
 .link, .menuToggle { min-height: 44px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 500; cursor: pointer; }
-.link { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 6px; transition: text-decoration-color .2s; }
+.link { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 6px; transition: text-decoration-color var(--motion-response) var(--ease-ui); }
 .link:hover { text-decoration-color: currentColor; }
 .menuToggle { gap: 9px; list-style: none; color: #e0e1ff; }
 .menuToggle::-webkit-details-marker { display: none; }
 .menuToggle:hover { color: #f8f7f4; }
 .menuSign { display: inline-block; width: 8px; height: 8px; position: relative; }
 .menuSign::before, .menuSign::after { content: ""; position: absolute; background: currentColor; inset: 3px 0; }
-.menuSign::after { transform: rotate(90deg); transition: transform .2s; }
+.menuSign::after { transform: rotate(90deg); transition: transform var(--motion-response) var(--ease-ui); }
 .menu[open] .menuSign::after { transform: rotate(0); }
 .menuPanel {
   position: absolute;
@@ -59,4 +59,14 @@
 
 @media (prefers-reduced-motion: reduce) {
   .navigation, .header * { animation: none !important; transition: none !important; }
+}
+
+.link[aria-current="location"], .menuPanel a[aria-current="location"] { text-decoration: underline; text-decoration-color: currentColor; text-underline-offset: 6px; }
+.menuToggle[data-active] { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
+.menuToggle { transition: color var(--motion-feedback) var(--ease-feedback); }
+.menuPanel { animation: menu-enter var(--motion-content) var(--ease-editorial); }
+@keyframes menu-enter { from { opacity: .65; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 599px) {
+  .menuToggle[data-section-active] { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
 }
