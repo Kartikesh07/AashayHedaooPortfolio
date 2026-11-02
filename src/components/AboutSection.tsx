@@ -1,122 +1,157 @@
-import { ArrowUpRight, BookOpen, Compass, Bike, Brain } from "lucide-react";
-import { PROFILE } from "@/data/profile";
+"use client";
+
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { editorialSans } from "./editorialFonts";
+import styles from "./AboutSection.module.css";
+
+// Faithful editorial summaries of PROFILE.about.passion, interests and hobbies.
+const NOTES = [
+  {
+    id: "psychology",
+    reference: "01",
+    phrase: "psychology",
+    category: "Human psychology",
+    title: "Understanding people.",
+    text: "I enjoy reading psychology books to understand decision-making, cognitive biases and emotional responses — and how these connect with the way people play.",
+  },
+  {
+    id: "strategy",
+    reference: "02",
+    phrase: "strategy",
+    category: "Strategy & games",
+    title: "Questioning assumptions.",
+    text: "I’m drawn to strategy-driven games that push players to rethink their assumptions. I enjoy analyzing player behavior and exploring creative ways to solve problems.",
+  },
+  {
+    id: "exploration",
+    reference: "03",
+    phrase: "exploration",
+    category: "Beyond the screen",
+    title: "Exploring the real world.",
+    text: "Outdoor games, adventure and long bike rides help me recharge. Exploring new places brings fresh inspiration for level layouts and challenges.",
+  },
+] as const;
+
+type NoteId = (typeof NOTES)[number]["id"];
+
+const REVEAL = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" as const },
+  },
+};
 
 export function AboutSection() {
+  const [activeNote, setActiveNote] = useState<NoteId>("psychology");
+  const reducedMotion = useReducedMotion();
+
   return (
-    <section id="about" className="py-20 md:py-28 border-b border-[#D8D2C2] bg-[#F7F4EC]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#D8D2C2]">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#F36B45] rounded-xs" />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#667169] font-medium">
-                Designer Profile & Mindset
-              </span>
-            </div>
-            <h2 className="font-display font-bold text-4xl sm:text-5xl text-[#17231F] tracking-tight uppercase">
-              About Aashay Hedaoo
-            </h2>
-          </div>
-          <p className="text-sm md:text-base text-[#667169] max-w-md font-sans">
-            Game and level designer interested in how players think,
-            experiment, and find flow state in mobile gaming.
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className={`${styles.section} ${editorialSans.className}`}
+    >
+      <motion.div
+        className={styles.composition}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ staggerChildren: reducedMotion ? 0 : 0.06 }}
+      >
+        <motion.p
+          className={styles.identifier}
+          variants={REVEAL}
+          data-about-reveal
+        >
+          04 / About
+        </motion.p>
+
+        <motion.header variants={REVEAL} data-about-reveal>
+          <h2 id="about-heading" className={styles.headline}>
+            <span>Off the clock.</span>{" "}
+            <span>Still curious.</span>
+          </h2>
+          <p className={styles.subtitle}>
+            More than mechanics, metrics, and level layouts.
           </p>
-        </div>
+        </motion.header>
 
-        {/* Two-Column Editorial Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 pt-12">
-          
-          {/* Left Column: Biography & Professional Narrative (Cols 1-7) */}
-          <div className="lg:col-span-7 space-y-6">
-            
-            <div className="space-y-4">
-              <span className="font-mono text-xs text-[#F36B45] font-semibold uppercase tracking-wider">
-                Personal Philosophy
+        <motion.div
+          className={styles.editorial}
+          variants={REVEAL}
+          data-about-reveal
+        >
+          <p className={styles.introduction}>
+            I&apos;m Aashay. I&apos;m fascinated by what makes people think,
+            experiment, and discover something new.
+          </p>
+          <p className={styles.narrative}>
+            My curiosity reaches beyond game design — into{" "}
+            {NOTES.map((note, index) => (
+              <span key={note.id}>
+                {index === 2 ? "and " : null}
+                <button
+                  type="button"
+                  className={styles.annotation}
+                  aria-label={`Read note ${note.reference}: ${note.phrase}`}
+                  aria-pressed={activeNote === note.id}
+                  aria-controls={`about-note-${note.id}`}
+                  onClick={() => setActiveNote(note.id)}
+                >
+                  {note.phrase}
+                  <sup aria-hidden="true">{note.reference}</sup>
+                </button>
+                {index < NOTES.length - 1 ? ", " : "."}
               </span>
-              <p className="font-display font-bold text-2xl sm:text-3xl text-[#17231F] leading-snug">
-                &ldquo;{PROFILE.about.lead}&rdquo;
-              </p>
-            </div>
+            ))}
+          </p>
+          <p className={styles.instruction}>
+            Select an underlined word to read a personal note.
+          </p>
 
-            <div className="space-y-4 text-base text-[#17231F]/80 leading-relaxed font-sans">
-              {PROFILE.about.narrative.map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
-            </div>
-
-            {/* Core Values Strip */}
-            <div className="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-1">
-                <div className="font-mono text-xs font-bold text-[#F36B45] uppercase">
-                  Design Core Value
+          <div
+            className={styles.footnotes}
+            role="region"
+            aria-label="Personal notes"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {NOTES.map((note) => (
+              <article
+                key={note.id}
+                id={`about-note-${note.id}`}
+                aria-labelledby={`about-note-${note.id}-title`}
+                aria-hidden={activeNote !== note.id}
+                inert={activeNote !== note.id}
+                data-active={activeNote === note.id}
+                className={styles.note}
+              >
+                <span className={styles.reference} aria-hidden="true">
+                  {note.reference}
+                </span>
+                <div className={styles.noteContent}>
+                  <p className={styles.category}>{note.category}</p>
+                  <h3 id={`about-note-${note.id}-title`} className={styles.noteTitle}>
+                    {note.title}
+                  </h3>
+                  <p className={styles.noteText}>{note.text}</p>
                 </div>
-                <div className="text-sm text-[#17231F] font-medium">
-                  High-retention content finely tuned for player engagement without tutorials.
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-1">
-                <div className="font-mono text-xs font-bold text-[#17231F] uppercase">
-                  Telemetry Discipline
-                </div>
-                <div className="text-sm text-[#17231F] font-medium">
-                  Using GameAnalytics to improve gameplay and retention.
-                </div>
-              </div>
-            </div>
-
+              </article>
+            ))}
           </div>
+        </motion.div>
 
-          {/* Right Column: Passions, Interests & Life Beyond Editor (Cols 8-12) */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* Passion: Psychology */}
-            <div className="p-6 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-3">
-              <div className="flex items-center gap-2.5 text-[#F36B45]">
-                <Brain className="w-5 h-5" />
-                <span className="font-mono text-xs uppercase font-bold tracking-wider">
-                  Passion // Human Psychology
-                </span>
-              </div>
-              <p className="text-sm text-[#17231F]/80 leading-relaxed font-sans">
-                {PROFILE.about.passion}
-              </p>
-            </div>
-
-            {/* Interests: Strategy & Behavioral Analysis */}
-            <div className="p-6 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-3">
-              <div className="flex items-center gap-2.5 text-[#17231F]">
-                <Compass className="w-5 h-5" />
-                <span className="font-mono text-xs uppercase font-bold tracking-wider">
-                  Interests // Strategy & Mechanics
-                </span>
-              </div>
-              <p className="text-sm text-[#17231F]/80 leading-relaxed font-sans">
-                {PROFILE.about.interests}
-              </p>
-            </div>
-
-            {/* Hobbies: Outdoor Adventure & Motorcycles */}
-            <div className="p-6 rounded-xs bg-[#17231F] text-[#F7F4EC] border border-[#2F453E] space-y-3">
-              <div className="flex items-center gap-2.5 text-[#C8F17A]">
-                <Bike className="w-5 h-5" />
-                <span className="font-mono text-xs uppercase font-bold tracking-wider">
-                  Hobbies // Outdoor Exploration
-                </span>
-              </div>
-              <p className="text-sm text-[#EDE9DD] leading-relaxed font-sans">
-                {PROFILE.about.hobbies}
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
+        <motion.p
+          className={styles.signature}
+          variants={REVEAL}
+          data-about-reveal
+        >
+          Curiosity doesn&apos;t clock out.
+        </motion.p>
+      </motion.div>
     </section>
   );
 }
-

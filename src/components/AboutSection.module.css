@@ -1,0 +1,321 @@
+.section {
+  --about-peach: #ffe4d2;
+  --about-ink: #17191d;
+  --about-cobalt: #4548ed;
+  --about-muted: #59545a;
+  --about-rule: #d5baad;
+  background: var(--about-peach);
+  color: var(--about-ink);
+  color-scheme: light;
+  scroll-margin-top: 80px;
+}
+
+.section *,
+.section *::before,
+.section *::after {
+  box-sizing: border-box;
+}
+
+.section ::selection {
+  background: var(--about-cobalt);
+  color: var(--about-peach);
+}
+
+.composition {
+  max-width: 1424px;
+  margin-inline: auto;
+  padding: clamp(60px, 7vw, 104px) clamp(24px, 5vw, 88px) 32px;
+}
+
+.identifier {
+  margin: 0 0 clamp(36px, 5vw, 64px);
+  color: var(--about-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.headline {
+  margin: 0;
+  font-size: clamp(42px, 8.3vw, 116px);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+}
+
+.headline > span {
+  display: block;
+}
+
+.headline > span:last-child {
+  margin-left: clamp(24px, 9vw, 128px);
+  color: var(--about-cobalt);
+  font-weight: 450;
+}
+
+.subtitle {
+  margin: 24px 0 0 clamp(24px, 9vw, 128px);
+  color: var(--about-muted);
+  font-size: clamp(14px, 1.3vw, 17px);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.editorial {
+  max-width: 850px;
+  margin-top: clamp(40px, 5.5vw, 80px);
+  margin-left: 20%;
+}
+
+.introduction {
+  max-width: 37ch;
+  margin: 0;
+  font-size: clamp(24px, 2.8vw, 36px);
+  font-weight: 450;
+  line-height: 1.4;
+  letter-spacing: -.035em;
+  text-wrap: pretty;
+}
+
+.narrative {
+  max-width: 49ch;
+  margin: 24px 0 0;
+  color: var(--about-muted);
+  font-size: clamp(18px, 2vw, 23px);
+  line-height: 1.9;
+  letter-spacing: -.02em;
+  text-wrap: pretty;
+}
+
+.annotation {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: var(--about-ink);
+  font: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
+  cursor: pointer;
+  touch-action: manipulation;
+  scroll-margin-block: 100px;
+  transition: color .18s ease;
+}
+
+.annotation::after {
+  content: "";
+  position: absolute;
+  inset: auto 2px 5px;
+  height: 1px;
+  background: var(--about-cobalt);
+  transform-origin: left;
+  transition: transform .18s ease;
+}
+
+.annotation sup {
+  position: relative;
+  top: -.65em;
+  color: var(--about-cobalt);
+  font-size: 10px;
+  line-height: 0;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.annotation[aria-pressed="true"] {
+  color: var(--about-cobalt);
+}
+
+.annotation[aria-pressed="true"]::after,
+.annotation:focus-visible::after {
+  transform: scaleY(2);
+}
+
+.annotation:focus-visible {
+  outline: 2px solid var(--about-cobalt);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) {
+  .annotation:hover {
+    color: var(--about-cobalt);
+  }
+
+  .annotation:hover::after {
+    transform: scaleY(2);
+  }
+}
+
+.instruction {
+  margin: 12px 0 0;
+  color: var(--about-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Overlapping grid items reserve the tallest note's natural height at every width. */
+.footnotes {
+  display: grid;
+  max-width: 660px;
+  margin: 32px 0 0 clamp(0px, 3vw, 40px);
+  border-top: 1px solid var(--about-rule);
+}
+
+.note {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  grid-area: 1 / 1;
+  column-gap: 20px;
+  min-width: 0;
+  padding-top: 24px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .16s ease, transform .2s ease, visibility 0s .2s;
+}
+
+.note[data-active="true"] {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .22s .08s ease, transform .22s .08s ease, visibility 0s;
+}
+
+.reference {
+  color: var(--about-cobalt);
+  font-size: 13px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.noteContent {
+  min-width: 0;
+}
+
+.category {
+  margin: 0 0 9px;
+  color: var(--about-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.noteTitle {
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+
+.noteText {
+  max-width: 54ch;
+  margin: 0;
+  color: var(--about-muted);
+  font-size: 15px;
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.signature {
+  margin: clamp(40px, 5vw, 72px) 0 0;
+  color: var(--about-muted);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: .08em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .editorial {
+    margin-left: 12%;
+  }
+
+  .footnotes {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .composition {
+    padding: 52px 24px 28px;
+  }
+
+  .headline {
+    font-size: clamp(30px, 8.2vw, 49px);
+    letter-spacing: -.055em;
+    line-height: 1.08;
+  }
+
+  .headline > span:last-child {
+    margin-left: 16px;
+  }
+
+  .subtitle {
+    max-width: 30ch;
+    margin: 20px 0 0 16px;
+  }
+
+  .editorial {
+    margin: 36px 0 0;
+  }
+
+  .introduction {
+    font-size: clamp(23px, 5.4vw, 29px);
+  }
+
+  .narrative {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 2;
+  }
+
+  .footnotes {
+    margin-top: 24px;
+  }
+
+  .note {
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 12px;
+    padding-top: 20px;
+  }
+
+  .noteText {
+    font-size: 14px;
+  }
+
+  .signature {
+    margin-top: 36px;
+    text-align: left;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section [data-about-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .section *, .section *::before, .section *::after {
+    transition: none !important;
+  }
+
+  .note {
+    transform: none;
+  }
+}
