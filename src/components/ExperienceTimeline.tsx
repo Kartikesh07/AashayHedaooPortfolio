@@ -1,109 +1,168 @@
-import { Calendar, MapPin, CheckCircle2, Award } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { PROFILE } from "@/data/profile";
+import styles from "./ExperienceTimeline.module.css";
+import { editorialSans } from "./editorialFonts";
+
+// Presentation labels only; every figure is read from the verified profile.
+const FEATURED_LABELS = [
+  { source: "Levels Designed", label: "Levels Designed" },
+  { source: "Published Games", label: "Published Games" },
+  { source: "Total Player Downloads", label: "Downloads Across Credited Games" },
+];
+const FEATURED = FEATURED_LABELS.flatMap((presentation) => {
+  const achievement = PROFILE.achievements.find((item) => item.label === presentation.source);
+  return achievement ? [{ ...achievement, displayLabel: presentation.label }] : [];
+});
+// The source's level-reach/retention figure has no cohort or benchmark context.
+// Keep it in profile.ts, without presenting it as an isolated success metric here.
+const SUPPORTING = PROFILE.achievements.filter((item) =>
+  !FEATURED_LABELS.some((featured) => featured.source === item.label) &&
+  item.label !== "Level 400 Retention"
+);
+const CREDIT_SUMMARIES: Record<string, string> = {
+  "Game Wise": "Leading game design direction, from new mechanics and rapid prototypes to complete gameplay systems and progression.",
+  "MindYourLogic Studios": "Designed puzzle and logic gameplay from concept to release, spanning mechanics, progression, missions and events.",
+};
+const CREDITS = PROFILE.experiences.map((experience) => ({
+  ...experience,
+  id: `credit-${experience.company.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+}));
+const YEARS = CREDITS.flatMap((credit) => credit.period.match(/\b\d{4}\b/g) ?? []).map(Number);
+const CAREER_RANGE = YEARS.length
+  ? `${Math.min(...YEARS)} — ${CREDITS.some((credit) => /present/i.test(credit.period)) ? "Present" : Math.max(...YEARS)}`
+  : "Professional history";
 
 export function ExperienceTimeline() {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const reducedMotion = useReducedMotion();
+  // Content is visible in the server output; viewport animation adds a brief reveal.
+  const entrance = {
+    initial: false as const,
+    whileInView: reducedMotion ? { opacity: 1, y: 0 } : { opacity: [0.65, 1], y: [10, 0] },
+    viewport: { once: true, amount: 0.15 },
+    transition: { duration: reducedMotion ? 0 : 0.45, ease: "easeOut" as const },
+  };
+
   return (
-    <section id="experience" className="py-20 md:py-28 border-b border-[#D8D2C2] bg-[#F7F4EC]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#D8D2C2]">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 bg-[#F36B45] rounded-xs" />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#667169] font-medium">
-                Track Record & Commercial Roles
-              </span>
-            </div>
-            <h2 className="font-display font-bold text-4xl sm:text-5xl text-[#17231F] tracking-tight uppercase">
-              Experience & Achievements
-            </h2>
+    <section
+      id="experience"
+      aria-labelledby="experience-heading"
+      className={`${styles.section} ${editorialSans.className}`}
+    >
+      <div className={styles.container}>
+        <motion.header {...entrance} data-credits-reveal>
+          <div className={styles.metadata}>
+            <p>06 / Experience</p>
+            <p>{CAREER_RANGE}</p>
           </div>
-          <p className="text-sm md:text-base text-[#667169] max-w-md font-sans">
-            Proven commercial track record designing high-retention mobile puzzle titles
-            at leading regional game studios.
+          <p className={styles.eyebrow}>The credits</p>
+          <h2 id="experience-heading" className={styles.headline}>
+            <span>The work</span>{" "}
+            <span>behind the work.</span>
+          </h2>
+          <p className={styles.subtitle}>
+            Professional experience, shipped games, and the numbers behind the journey.
           </p>
-        </div>
+        </motion.header>
 
-        {/* 6 Achievements Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-12">
-          {PROFILE.achievements.map((ach, idx) => (
-            <div
-              key={idx}
-              className="p-5 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-2 hover:border-[#F36B45] transition-colors"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display font-black text-3xl sm:text-4xl text-[#F36B45]">
-                  {ach.stat}
-                </span>
-                <Award className="w-5 h-5 text-[#667169]" />
-              </div>
-              <div className="font-display font-bold text-base text-[#17231F]">
-                {ach.label}
-              </div>
-              <p className="text-xs text-[#667169] font-sans leading-relaxed">
-                {ach.description}
+        <div className={styles.achievements}>
+          <dl className={styles.figures} aria-label="Selected portfolio achievements">
+            {FEATURED.map((achievement) => (
+              <motion.div key={achievement.label} {...entrance} className={styles.figure} data-credits-reveal>
+                <motion.dt
+                  initial={false}
+                  whileInView={reducedMotion ? { opacity: 1 } : { opacity: [0.65, 1] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: reducedMotion ? 0 : 0.35, delay: reducedMotion ? 0 : 0.08 }}
+                  className={styles.figureLabel}
+                >
+                  {achievement.displayLabel}
+                </motion.dt>
+                <dd className={styles.figureValue}>{achievement.stat}</dd>
+                <dd className={styles.figureContext}>{achievement.description}</dd>
+              </motion.div>
+            ))}
+          </dl>
+          <div className={styles.supporting}>
+            {SUPPORTING.map((achievement) => (
+              <p key={achievement.label}>
+                <span className={styles.supportingTitle}>{achievement.stat} / {achievement.label}</span>
+                <span>{achievement.description}</span>
               </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Work Roles Editorial Timeline */}
-        <div className="mt-16 space-y-8">
-          <div className="font-mono text-xs uppercase tracking-widest text-[#17231F] font-bold pb-2 border-b border-[#D8D2C2]">
-            Professional Timeline
-          </div>
-
-          <div className="space-y-8">
-            {PROFILE.experiences.map((exp, idx) => (
-              <div
-                key={idx}
-                className="p-6 sm:p-8 rounded-xs bg-[#EDE9DD] border border-[#D8D2C2] space-y-6 hover:border-[#17231F] transition-colors"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D8D2C2]">
-                  <div>
-                    <h3 className="font-display font-bold text-2xl text-[#17231F]">
-                      {exp.role}
-                    </h3>
-                    <div className="font-mono text-sm text-[#F36B45] font-semibold mt-0.5">
-                      {exp.company}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[#667169]">
-                    <span className="flex items-center gap-1.5 bg-[#F7F4EC] px-3 py-1 rounded-xs border border-[#D8D2C2]">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {exp.period}
-                    </span>
-                    <span className="flex items-center gap-1.5 bg-[#F7F4EC] px-3 py-1 rounded-xs border border-[#D8D2C2]">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {exp.location}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="font-mono text-xs font-semibold text-[#17231F] uppercase tracking-wider">
-                    Core Design Responsibilities & Contributions
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {exp.responsibilities.map((resp, rIdx) => (
-                      <div key={rIdx} className="flex items-start gap-2.5">
-                        <CheckCircle2 className="w-4 h-4 text-[#F36B45] shrink-0 mt-0.5" />
-                        <span className="text-xs sm:text-sm text-[#17231F]/80 font-sans leading-relaxed">
-                          {resp}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             ))}
           </div>
         </div>
 
+        <motion.div {...entrance} className={styles.credits} data-credits-reveal>
+          <div className={styles.creditsHeading}>
+            <h3>Professional credits</h3>
+            <p>Studios, roles &amp; contributions</p>
+          </div>
+          {CREDITS.map((credit) => {
+            const expanded = expandedId === credit.id;
+            return (
+              <article key={credit.company} className={styles.credit} data-expanded={expanded}>
+                <header className={styles.creditHeader}>
+                  <div className={styles.identity}>
+                    <h4 className={styles.studioHeading}>
+                      <button
+                        id={`${credit.id}-button`}
+                        type="button"
+                        className={styles.studioButton}
+                        aria-expanded={expanded}
+                        aria-controls={`${credit.id}-notes`}
+                        onClick={() => setExpandedId((current) => current === credit.id ? null : credit.id)}
+                      >
+                        <span>{credit.company}</span>
+                        <span className={styles.indicator} aria-hidden="true">↗</span>
+                      </button>
+                    </h4>
+                    <p className={styles.role}>{credit.role}</p>
+                  </div>
+                  <div className={styles.creditMetadata}>
+                    <p className={styles.period}>{credit.period}</p>
+                    <p>{credit.location}</p>
+                  </div>
+                </header>
+                <div className={styles.creditBody}>
+                  <p className={styles.summary}>
+                    {CREDIT_SUMMARIES[credit.company] ?? credit.responsibilities[0]}
+                  </p>
+                  <p className={styles.actionHint} aria-hidden="true">
+                    {expanded ? "Select studio to close notes" : "Select studio for production notes"}
+                  </p>
+                </div>
+                <div
+                  id={`${credit.id}-notes`}
+                  role="region"
+                  aria-labelledby={`${credit.id}-button`}
+                  aria-hidden={!expanded}
+                  inert={!expanded}
+                  className={styles.reveal}
+                >
+                  <div className={styles.revealClip}>
+                    <div className={styles.productionNotes}>
+                      <p className={styles.notesLabel}>Production notes</p>
+                      <ul className={styles.responsibilities}>
+                        {credit.responsibilities.map((responsibility) => (
+                          <li key={responsibility}>{responsibility}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </motion.div>
+
+        <p className={styles.closing}>
+          From designing individual challenges to shaping complete player experiences.
+        </p>
       </div>
     </section>
   );
 }
-
